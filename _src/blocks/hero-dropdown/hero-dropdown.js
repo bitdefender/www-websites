@@ -16,11 +16,15 @@ function buildHeroDropdownBlock(element) {
 	section.prepend(pictureEl);
 	if (pictureParent) pictureParent.remove();
 }
+var dropdowns = 0;
 function createDropdownItem(code, friendlyName, isActive) {
 	const item = document.createElement("div");
 	item.classList.add("custom-dropdown-item");
 	if (isActive) item.classList.add("active");
 	item.setAttribute("data-value", code);
+	item.setAttribute("role", "option");
+	item.setAttribute("aria-selected", String(isActive));
+	item.tabIndex = -1;
 	item.textContent = friendlyName;
 	return item;
 }
@@ -82,6 +86,14 @@ createNanoBlock("dropdown", (...args) => {
   `;
 	const optionsList = document.createElement("div");
 	optionsList.classList.add("options-list");
+	dropdowns += 1;
+	optionsList.id = `hero-dropdown-options-${dropdowns}`;
+	optionsList.setAttribute("role", "listbox");
+	selectedOption.setAttribute("role", "button");
+	selectedOption.setAttribute("aria-haspopup", "listbox");
+	selectedOption.setAttribute("aria-controls", optionsList.id);
+	selectedOption.setAttribute("aria-expanded", "false");
+	selectedOption.tabIndex = 0;
 	products.forEach((prod, index) => {
 		const [product, unit, year] = prod.split("/");
 		const code = `${product}/${unit}/${year}`;
@@ -115,29 +127,58 @@ createNanoBlock("dropdown", (...args) => {
 	customDropdown.appendChild(optionsList);
 	dropdownWrapper.appendChild(customDropdown);
 	root.insertBefore(dropdownWrapper, root.firstChild);
+	const items = [...optionsList.querySelectorAll(".custom-dropdown-item")];
+	const choices = () => items.filter((item) => !item.classList.contains("active"));
+	const setOpen = (open) => {
+		[
+			optionsList,
+			selectedOption,
+			customDropdown
+		].forEach((el) => el.classList.toggle("open", open));
+		selectedOption.setAttribute("aria-expanded", String(open));
+	};
 	selectedOption.addEventListener("click", () => {
-		const isOpen = optionsList.classList.contains("open");
-		optionsList.classList.toggle("open");
-		selectedOption.classList.toggle("open", !isOpen);
-		customDropdown.classList.toggle("open", !isOpen);
+		setOpen(!optionsList.classList.contains("open"));
+	});
+	selectedOption.addEventListener("keydown", (event) => {
+		if (![
+			"Enter",
+			" ",
+			"ArrowDown"
+		].includes(event.key)) return;
+		event.preventDefault();
+		setOpen(true);
+		choices()[0]?.focus();
+	});
+	optionsList.addEventListener("keydown", (event) => {
+		const options = choices();
+		const index = options.indexOf(document.activeElement);
+		if (index < 0) return;
+		if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+			event.preventDefault();
+			options[(index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length].focus();
+		} else if (event.key === "Enter" || event.key === " ") {
+			event.preventDefault();
+			options[index].click();
+			selectedOption.focus();
+		} else if (event.key === "Escape") {
+			setOpen(false);
+			selectedOption.focus();
+		} else if (event.key === "Tab") setOpen(false);
 	});
 	document.addEventListener("click", (event) => {
-		if (!customDropdown.contains(event.target)) {
-			optionsList.classList.remove("open");
-			selectedOption.classList.remove("open");
-			customDropdown.classList.remove("open");
-		}
+		if (!customDropdown.contains(event.target)) setOpen(false);
 	});
-	[...optionsList.querySelectorAll(".custom-dropdown-item")].forEach((item, index) => {
+	items.forEach((item, index) => {
 		item.addEventListener("click", () => {
 			const selected = item.getAttribute("data-value");
 			const label = item.textContent;
 			selectedOption.querySelector(".selected-label").textContent = label;
-			optionsList.classList.remove("open");
-			selectedOption.classList.remove("open");
-			customDropdown.classList.remove("open");
-			[...optionsList.querySelectorAll(".custom-dropdown-item")].forEach((el) => el.classList.remove("active"));
-			item.classList.add("active");
+			setOpen(false);
+			items.forEach((el) => {
+				el.classList.toggle("active", el === item);
+				el.setAttribute("aria-selected", String(el === item));
+			});
 			[...root.querySelectorAll(".dropdown-products__price-box")].forEach((box) => {
 				box.style.display = box.dataset.code === selected ? "block" : "none";
 			});

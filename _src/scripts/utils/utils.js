@@ -1282,7 +1282,7 @@ var spokenText = (node) => [...node.childNodes].map((child) => {
 * read aria-label and skip aria-labelledby. Call it once the parts hold their final text.
 * @param {HTMLElement} element a CTA, or the container of a plan picker
 * @param {Array<HTMLElement|null|undefined>} parts elements naming the plan, in reading order;
-* missing, empty, repeated and enclosing ones are skipped
+* missing, hidden, empty, repeated and enclosing ones are skipped
 * @param {object} [options]
 * @param {boolean} [options.withOwnText=true] start the name with the element's own text,
 * as a CTA's name has to
@@ -1294,7 +1294,7 @@ function labelWithPlan(element, parts, { withOwnText = true, attribute = "aria-l
 	if (!element) return;
 	const normalize = (text) => text.replace(/\s+/g, " ").trim();
 	const ownText = withOwnText ? normalize(spokenText(element)) : "";
-	const plan = [...new Set(parts)].filter((part) => part && !part.contains(element)).map((part) => normalize(spokenText(part))).filter((text) => text && !ownText.toLowerCase().includes(text.toLowerCase()));
+	const plan = [...new Set(parts)].filter((part) => part && !part.contains(element) && !part.closest("[aria-hidden=\"true\"], [hidden]")).map((part) => normalize(spokenText(part))).filter((text) => text && !ownText.toLowerCase().includes(text.toLowerCase()));
 	if (!plan.length) return;
 	element.setAttribute(attribute, [ownText, ...plan].filter(Boolean).join(" "));
 }
