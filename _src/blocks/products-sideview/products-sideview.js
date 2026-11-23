@@ -138,23 +138,26 @@ function renderPrice(block) {
 	}
 	return option;
 }
+var radioGroups = 0;
 function renderRadioGroup(block, monthlyLabel, yearlyLabel) {
+	radioGroups += 1;
+	const group = `products-sideview-${radioGroups}`;
 	const { defaultSelection } = state.blockDataset;
 	const [firstProduct, secondProduct] = state.blockDataset.price.split(",");
 	const el = document.createElement("DIV");
 	el.classList.add("products-sideview-radio");
 	el.innerHTML = `
-    <input type="radio" name="type" id="monthly"
+    <input type="radio" name="${group}" id="${group}-monthly"
     data-store-action data-store-set-id="${secondProduct}"
     data-store-set-subscription="1"
     data-product-type="monthly" ${defaultSelection.split("-")[0] === secondProduct ? "checked" : ""}/>
-    <label for="monthly">${monthlyLabel ?? "Monthly"}</label>
+    <label for="${group}-monthly">${monthlyLabel ?? "Monthly"}</label>
 
-    <input type="radio" name="type" id="yearly" data-store-action
+    <input type="radio" name="${group}" id="${group}-yearly" data-store-action
     data-store-set-id="${firstProduct}"
     data-store-set-subscription="1"
     data-product-type="yearly" ${defaultSelection.split("-")[0] === firstProduct ? "checked" : ""}/>
-    <label for="yearly">${yearlyLabel ?? "Yearly"}</label>
+    <label for="${group}-yearly">${yearlyLabel ?? "Yearly"}</label>
   `;
 	return el;
 }

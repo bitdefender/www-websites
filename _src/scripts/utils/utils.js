@@ -1298,6 +1298,71 @@ function labelWithPlan(element, parts, { withOwnText = true, attribute = "aria-l
 	if (!plan.length) return;
 	element.setAttribute(attribute, [ownText, ...plan].filter(Boolean).join(" "));
 }
+var STORE_BUY_LINK = "a[data-store-buy-link], a[href*=\"#buylink\"]";
+var isPlaceholderHref = (href) => !href || href === "#" || href.endsWith("#buylink");
+/**
+* Flags a store buy link aria-disabled while it has no checkout URL: missing, '', '#' or
+* '#buylink', which it keeps until the store resolves, and for good when the store has no
+* such option. An agent reads a disabled link as one to wait for, not one to click and land
+* nowhere. Only the flag it set is cleared, never one a block set.
+* @param {HTMLAnchorElement} link
+*/
+var flagPendingBuyLink = (link) => {
+	if (isPlaceholderHref(link.getAttribute("href"))) {
+		if (link.hasAttribute("aria-disabled")) return;
+		link.setAttribute("aria-disabled", "true");
+		link.dataset.buyLinkPending = "";
+	} else if (link.hasAttribute("data-buy-link-pending")) {
+		link.removeAttribute("aria-disabled");
+		link.removeAttribute("data-buy-link-pending");
+	}
+};
+/**
+* Keeps the store buy links under root flagged while they have no checkout URL: those there
+* now, those blocks and modals add later, and each time the store changes an href.
+* @param {Element} root
+* @returns {MutationObserver}
+*/
+function watchPendingBuyLinks(root) {
+	root.querySelectorAll(STORE_BUY_LINK).forEach(flagPendingBuyLink);
+	const observer = new MutationObserver((records) => records.forEach((record) => {
+		if (record.type === "attributes") {
+			if (record.target.matches(STORE_BUY_LINK)) flagPendingBuyLink(record.target);
+			return;
+		}
+		record.addedNodes.forEach((node) => {
+			if (node.nodeType !== Node.ELEMENT_NODE) return;
+			if (node.matches(STORE_BUY_LINK)) flagPendingBuyLink(node);
+			if (node.firstElementChild) node.querySelectorAll(STORE_BUY_LINK).forEach(flagPendingBuyLink);
+		});
+	}));
+	observer.observe(root, {
+		subtree: true,
+		childList: true,
+		attributes: true,
+		attributeFilter: ["href", "data-store-buy-link"]
+	});
+	return observer;
+}
+/**
+* Points a design-system button (bd-button) at what an authored link opens. A fragment link,
+* whose path detectModalButtons moved to `location`, gets no href, so bd-button renders a
+* native <button>, and the path in `location`, where the document's modal listener
+* (modal-triggers.js) opens it as a modal. Copying the link's href alone left a button that
+* did nothing. Any other link becomes the button's href.
+* @param {HTMLElement} button a bd-button
+* @param {HTMLAnchorElement} link the authored link
+*/
+function pointButtonAt(button, link) {
+	const modalPath = link.getAttribute("location") || (link.matches("a.button.modal") ? link.getAttribute("href") : null);
+	if (!modalPath) {
+		button.setAttribute("href", link.getAttribute("href") || "");
+		return;
+	}
+	button.setAttribute("location", modalPath);
+	const { stopAutomaticModalRefresh } = link.dataset;
+	if (stopAutomaticModalRefresh) button.dataset.stopAutomaticModalRefresh = stopAutomaticModalRefresh;
+}
 /**
 * @param {HTMLElement} element
 * @param {object} storeProperties
@@ -1556,4 +1621,4 @@ function onCookiesAccepted(callback) {
 		if (window.adobeDataLayer.getState("ucCategory.functional")) callback();
 	});
 }
-export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getBuyLinkRef, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, labelWithPlan, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };
+export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getBuyLinkRef, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, labelWithPlan, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pointButtonAt, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, watchPendingBuyLinks, wrapChildrenWithStoreContext, wrapSectionInDsSection };

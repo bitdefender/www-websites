@@ -1,5 +1,5 @@
 import { load } from '@repobit/dex-system-design/loader';
-import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import { pointButtonAt, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * Copy beside media, a bd-features-tab a row: one cell holds a heading, the
@@ -135,7 +135,7 @@ const buildActions = (cell) => {
 
   const bdBtn = document.createElement('bd-button');
   bdBtn.setAttribute('slot', 'actions');
-  bdBtn.setAttribute('href', anchor.getAttribute('href') || '#');
+  pointButtonAt(bdBtn, anchor);
   // the accent fill a conversion CTA takes, unless the author made the button
   // secondary; its size is bd-button's responsive default
   bdBtn.setAttribute('appearance', anchor.classList.contains('secondary') ? 'secondary' : 'accent');

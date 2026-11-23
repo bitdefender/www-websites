@@ -1,6 +1,6 @@
 import { load } from '@repobit/dex-system-design/loader';
 import {
-  liftSectionHeader, wrapSectionInDsSection,
+  liftSectionHeader, pointButtonAt, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
 
 /*
@@ -67,11 +67,15 @@ const copyOf = (cell) => [...cell.querySelectorAll('p')].filter((p) => p.textCon
 
 const paragraph = (p, appearance) => el('bd-p', { appearance }, ...p.childNodes);
 
-const linkOf = (cell) => cell.querySelector('a[href]');
+// a[location]: a fragment link, whose href detectModalButtons moved there
+const linkOf = (cell) => cell.querySelector('a[href], a[location]');
 
-const cta = (link) => link && el('bd-button', {
-  slot: 'actions', appearance: 'accent', href: link.getAttribute('href'),
-}, link.textContent.trim());
+const cta = (link) => {
+  if (!link) return null;
+  const button = el('bd-button', { slot: 'actions', appearance: 'accent' }, link.textContent.trim());
+  pointButtonAt(button, link);
+  return button;
+};
 
 /* === The variations: each builds one card from a cell, and says how many
    rows of the grid a card takes, which is the most any card in the row uses. */

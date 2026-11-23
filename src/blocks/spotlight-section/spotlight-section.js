@@ -1,5 +1,5 @@
 import { load } from '@repobit/dex-system-design/loader';
-import { wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import { pointButtonAt, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * A two-column band on the design system's bd-spotlight. Authored as one
@@ -70,7 +70,7 @@ const appendButtons = (banner, cell, slot) => {
   cell.querySelectorAll('.button-container a, a.button').forEach((link, index) => {
     const button = document.createElement('bd-button');
     button.setAttribute('slot', slot);
-    button.setAttribute('href', link.getAttribute('href') || '');
+    pointButtonAt(button, link);
     button.setAttribute(
       'appearance',
       slot === 'description-actions' || index > 0 || link.classList.contains('secondary')

@@ -1,4 +1,4 @@
-import { fullWidthOnPhone, getSectionContent, liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { fullWidthOnPhone, getSectionContent, liftSectionHeader, pointButtonAt, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/awards-spotlight/awards-spotlight.js
 var ASSET_SCALE = 1.5;
@@ -50,7 +50,8 @@ var liftActions = async (block) => {
 		const link = container.querySelector("a");
 		const button = document.createElement("bd-button");
 		button.setAttribute("appearance", "primary");
-		button.setAttribute("href", link?.getAttribute("href") || "");
+		if (link) pointButtonAt(button, link);
+		else button.setAttribute("href", "");
 		button.textContent = text(link);
 		return button;
 	});

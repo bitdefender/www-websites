@@ -1,4 +1,4 @@
-import { liftSectionHeader, splitAroundHeading, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { liftSectionHeader, pointButtonAt, splitAroundHeading, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/bento-cards/bento-cards.js
 var ART_LABELS = {
@@ -74,7 +74,7 @@ var buildCard = (row) => {
 		const link = p.querySelector("a");
 		const cta = slotted("bd-button", "actions", link.textContent.trim());
 		cta.setAttribute("appearance", "outline-white");
-		cta.setAttribute("href", link.getAttribute("href") || "");
+		pointButtonAt(cta, link);
 		card.append(cta);
 	});
 	return card;

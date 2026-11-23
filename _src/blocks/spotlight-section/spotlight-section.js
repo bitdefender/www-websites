@@ -1,4 +1,4 @@
-import { wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { pointButtonAt, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/spotlight-section/spotlight-section.js
 var toImg = (src, alt) => {
@@ -38,7 +38,7 @@ var appendButtons = (banner, cell, slot) => {
 	cell.querySelectorAll(".button-container a, a.button").forEach((link, index) => {
 		const button = document.createElement("bd-button");
 		button.setAttribute("slot", slot);
-		button.setAttribute("href", link.getAttribute("href") || "");
+		pointButtonAt(button, link);
 		button.setAttribute("appearance", slot === "description-actions" || index > 0 || link.classList.contains("secondary") ? "outline-white" : "white");
 		button.setAttribute("size", "sm");
 		button.textContent = link.textContent.trim();

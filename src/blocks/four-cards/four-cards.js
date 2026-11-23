@@ -1,6 +1,6 @@
 import { load } from '@repobit/dex-system-design/loader';
 import {
-  getSectionContent, labelWithPlan, liftSectionHeader, wrapSectionInDsSection,
+  getSectionContent, labelWithPlan, liftSectionHeader, pointButtonAt, wrapSectionInDsSection,
 } from '../../scripts/utils/utils.js';
 
 /*
@@ -69,7 +69,7 @@ const toMedia = (picture) => {
 const buildCta = (link, shape) => {
   const button = document.createElement('bd-button');
   button.setAttribute('appearance', 'accent');
-  button.setAttribute('href', link.getAttribute('href') || '');
+  pointButtonAt(button, link);
   if (shape) button.setAttribute('shape', shape);
   button.textContent = link.textContent.trim();
   return button;

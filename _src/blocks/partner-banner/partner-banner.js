@@ -1,4 +1,4 @@
-import { wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { pointButtonAt, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/partner-banner/partner-banner.js
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
@@ -60,7 +60,7 @@ async function decorate(block) {
 		button.setAttribute("slot", "actions");
 		const primary = p.querySelector("strong, b, a.button.primary");
 		button.setAttribute("appearance", primary ? "white" : "outline-white");
-		button.setAttribute("href", link.getAttribute("href") || "");
+		pointButtonAt(button, link);
 		button.textContent = text(link);
 		return button;
 	});
