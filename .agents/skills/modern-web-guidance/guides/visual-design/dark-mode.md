@@ -82,7 +82,10 @@ html {
 
 ### Issues to be aware of when using accent-color
 
-- When placing visual elements over the accent color (e.g. a checkbox checkmark), Chrome and Safari will automatically select a contrasting color, whereas Safari will modify the accent color, and may not maintain adequate contrast.
+Browser rendering of `accent-color` varies.
+For indicators generally painted over an accent color background, such as checkbox marks and radio-button dots, browsers may apply different treatments:
+- **Chromium** and **Firefox** generally select a contrasting indicator color.
+- **Safari** may instead preserve a white indicator in light mode or a black indicator in dark mode, while modifying the accent color behind it. This adjustment does not always provide sufficient contrast for every supplied color, so test important combinations in Safari, including both light and dark color schemes. Do not assume that Safari will automatically choose whichever indicator color provides the best contrast.
 
 ### Scrollbar colors
 
@@ -91,7 +94,8 @@ You can use `scrollbar-color` together with `light-dark()` to set custom scrollb
 ```css
 :root {
   --color-scrollbar-track: light-dark(#eee, #222);
-  --color-scrollbar-thumb: light-dark(#999, #666);
+  /* Example values: the thumb needs at least 3:1 contrast against the track */
+  --color-scrollbar-thumb: light-dark(#6b6b6b, #8a8a8a);
   scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
 }
 ```
@@ -99,9 +103,8 @@ You can use `scrollbar-color` together with `light-dark()` to set custom scrollb
 ### Issues to be aware of when using scrollbar-color
 
 - Do NOT animate or transition `scrollbar-color`. A [WebKit bug](https://bugs.webkit.org/show_bug.cgi?id=311752) causes the scrollbar to flicker every time `scrollbar-color` changes.
-- On macOS, `scrollbar-color` (standard) and `::-webkit-scrollbar` (legacy) properties are ignored by default because macOS uses native "overlay" scrollbars. You MUST pair custom colors with `scrollbar-width` (e.g., `thin` or `auto`) to force macOS to render them.
-- Even with `scrollbar-width` applied, macOS overlay scrollbars render the track (gutter) as transparent by default. If the design requires a visible track background color on MacOS, you MUST apply `scrollbar-gutter: stable;` to the scrollable container, but note that it only appears after the user hovers over the scrollbar.
-- Even with `scrollbar-gutter: stable` the track may be transparent on MacOS. The thumb should not depend on the track color to be visible.
+- Any computed `scrollbar-width` other than `auto` (`thin` or `none`) or computed `scrollbar-color` other than `auto` (including an inherited `scrollbar-color`) disables legacy `::-webkit-scrollbar` pseudo-elements on that element.
+- With overlay scrollbars (such as the macOS default), `scrollbar-color` styles the thumb while scrolling, whereas the track may remain transparent. Ensure the thumb color has sufficient contrast against both the track color and the scrollable container's background rather than relying on the track to frame the thumb.
 
 ### Further customization
 
@@ -170,11 +173,15 @@ To adapt to the user's preferences in older browsers, use `prefers-color-scheme`
   /* Define brand colors for each mode */
   --color-brand-light: #0056b3;
   --color-brand-dark: #00e5ff;
+  --color-brand-text-light: white;
+  --color-brand-text-dark: #001f24;
   --color-brand: var(--color-brand-light);
+  --color-brand-text: var(--color-brand-text-light);
 
   /* MANDATORY: Fallback for browsers without light-dark support */
   @media (prefers-color-scheme: dark) {
     --color-brand: var(--color-brand-dark);
+    --color-brand-text: var(--color-brand-text-dark);
   }
 
   /* Ignored in older browsers */
@@ -183,6 +190,7 @@ To adapt to the user's preferences in older browsers, use `prefers-color-scheme`
 
 button.primary {
 	background-color: var(--color-brand);
+	color: var(--color-brand-text);
 }
 ```
 
@@ -228,7 +236,7 @@ pre, code {
 ### Fallbacks & browser support for light-dark() image values
 
 Baseline status for light-dark() image values: Newly available. It's been Baseline since 2026-09-14.
-Supported by: Chrome 150, Edge 150, Firefox 150 (Apr 2026), and Safari 27.
+Supported by: Chrome 150 (Jun 2026), Edge 150 (Jul 2026), Firefox 150 (Apr 2026), and Safari 27 (Sep 2026).
 
 For browsers that do not support `light-dark()` for images, use `image-set()` as a switch:
 give each option a `type()` from a custom property, and set the inactive one to an unsupported MIME type so the browser discards that option.
@@ -304,15 +312,21 @@ This feature is progressive enhancement and does not always require fallbacks.
 
 If the styling is important and the user's Baseline target is "Baseline Widely Available" or earlier, you SHOULD include the non-standard `::-webkit-scrollbar` pseudo-elements as fallbacks.
 
-Wrap legacy fallbacks in an `@supports not (scrollbar-color: auto)` block to prevent conflicts between standard properties and legacy WebKit selectors in browsers that support both natively.
+Place legacy fallbacks after the base rule inside an `@supports not (scrollbar-color: auto)` block to prevent conflicts between standard properties and legacy WebKit selectors in browsers that support both natively. If you also set `scrollbar-width: thin` on the scrollable container, reset `scrollbar-width: auto` on the same selector inside `@supports not (scrollbar-color: auto)` so browsers that support `scrollbar-width` without `scrollbar-color` do not suppress `::-webkit-scrollbar` styling.
 
 If you are using custom properties to define colors, these will cascade to the legacy WebKit selectors automatically. You do NOT need to duplicate them.
 
 ```css
 /* Legacy fallback for WebKit/Blink browsers */
 @supports not (scrollbar-color: auto) {
+  .scroller {
+    /* Reset scrollbar-width: thin (if set) so it does not disable
+       ::-webkit-scrollbar in browsers without scrollbar-color */
+    scrollbar-width: auto;
+  }
+
   .scroller::-webkit-scrollbar {
-    /* Must define base size in WebKit for custom colors to be visual */
+    /* Must define a base size (e.g., 8px for thin or 12px for default) for custom colors to render in WebKit */
     width: 12px;
     height: 12px;
   }
