@@ -3243,7 +3243,6 @@ main .creators-banner .signature {
             content: "";
             position: absolute;
             left: 0;
-            top: 0.15em;
             width: 15px;
             height: 15px;
             background-color: var(--button-background-color);
