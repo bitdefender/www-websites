@@ -3246,7 +3246,7 @@ main .creators-banner .signature {
             top: 0.15em;
             width: 15px;
             height: 15px;
-            background-color: var(--color-dark-gray);
+            background-color: var(--button-background-color);
             mask: url("/_src/icons/x-circle.svg") no-repeat center / contain;
           }
         }
