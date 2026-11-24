@@ -1,3 +1,4 @@
+import { wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/media-feature/media-feature.js
 var VIDEO_EXTS = /\.(mp4|webm|ogg)(\?.*)?$/i;
@@ -25,8 +26,11 @@ var buildMediaSlot = (cell) => {
 			player.setAttribute("src", videoSrc);
 			if (thumbImg) {
 				player.setAttribute("thumb", thumbImg.src);
-				if (thumbImg.alt) player.setAttribute("thumb-alt", thumbImg.alt);
+				player.setAttribute("thumb-alt", thumbImg.alt || "Video preview");
+				player.setAttribute("play-label", "Play video");
+				player.setAttribute("close-label", "Close video");
 			}
+			if (YOUTUBE_RE.test(videoSrc)) player.setAttribute("video-title", "Video player");
 			return player;
 		}
 		const vid = document.createElement("video");
@@ -43,20 +47,19 @@ var buildMediaSlot = (cell) => {
 	}
 	return null;
 };
-var buildHeadingSlot = (headingEl) => {
+var buildTitle = (headingEl) => {
 	const bdH = document.createElement("bd-h");
-	bdH.setAttribute("slot", "heading");
+	bdH.setAttribute("slot", "title");
 	bdH.setAttribute("as", headingEl.tagName.toLowerCase());
-	bdH.setAttribute("color", "primary");
 	bdH.innerHTML = headingEl.innerHTML;
 	return bdH;
 };
 var buildListItem = (li) => {
 	const bdLi = document.createElement("bd-li");
-	bdLi.setAttribute("kind", "bullet");
+	bdLi.setAttribute("appearance", "bullet");
 	bdLi.setAttribute("size", "md");
 	const bdP = document.createElement("bd-p");
-	bdP.setAttribute("kind", "regular");
+	bdP.setAttribute("appearance", "regular");
 	bdP.innerHTML = li.innerHTML;
 	bdLi.appendChild(bdP);
 	return bdLi;
@@ -65,41 +68,38 @@ var buildList = (listEl) => {
 	const bdList = document.createElement("bd-list");
 	bdList.setAttribute("type", listEl.tagName === "OL" ? "ordered" : "unordered");
 	bdList.setAttribute("spacing", "md");
-	bdList.setAttribute("variant", "default");
+	bdList.setAttribute("appearance", "default");
 	bdList.setAttribute("orientation", "vertical");
 	Array.from(listEl.querySelectorAll(":scope > li")).forEach((li) => {
 		bdList.appendChild(buildListItem(li));
 	});
 	return bdList;
 };
-var buildContentSlot = (cell, headingEl) => {
-	const slot = document.createElement("div");
-	slot.setAttribute("slot", "content");
+var buildContent = (cell, headingEl) => {
+	const atoms = [];
 	Array.from(cell.children).forEach((child) => {
 		if (headingEl && (child === headingEl || child.contains(headingEl))) return;
 		if (child.classList.contains("button-container")) return;
 		if (child.tagName === "UL" || child.tagName === "OL") {
-			slot.appendChild(buildList(child));
+			atoms.push(buildList(child));
 			return;
 		}
 		if ((child.tagName === "P" || child.tagName === "DIV") && child.textContent.trim()) {
 			const bdP = document.createElement("bd-p");
-			bdP.setAttribute("kind", "regular");
+			bdP.setAttribute("appearance", "regular");
 			bdP.innerHTML = child.innerHTML;
-			slot.appendChild(bdP);
+			atoms.push(bdP);
 		}
 	});
-	return slot.children.length ? slot : null;
+	return atoms;
 };
-var buildCtaSlot = (cell) => {
+var buildActions = (cell) => {
 	const anchor = cell.querySelector(".button-container a");
 	if (!anchor) return null;
-	const bdBtn = document.createElement("bd-button-link");
-	bdBtn.setAttribute("slot", "cta");
+	const bdBtn = document.createElement("bd-button");
+	bdBtn.setAttribute("slot", "actions");
 	bdBtn.setAttribute("href", anchor.getAttribute("href") || "#");
-	bdBtn.setAttribute("kind", anchor.classList.contains("secondary") ? "secondary" : "danger");
-	bdBtn.setAttribute("size", "md");
-	bdBtn.setAttribute("strong", "");
+	bdBtn.setAttribute("appearance", anchor.classList.contains("secondary") ? "secondary" : "accent");
 	bdBtn.textContent = anchor.textContent.trim();
 	if (anchor.target === "_blank") {
 		bdBtn.setAttribute("target", "_blank");
@@ -118,16 +118,16 @@ var buildFeaturesTab = (row, shouldReverse) => {
 	const bdFT = document.createElement("bd-features-tab");
 	if (applyReverse) bdFT.setAttribute("reverse", "");
 	const headingEl = contentCell.querySelector("h1, h2, h3, h4, h5, h6");
-	if (headingEl) bdFT.appendChild(buildHeadingSlot(headingEl));
-	const contentSlot = buildContentSlot(contentCell, headingEl);
-	if (contentSlot) bdFT.appendChild(contentSlot);
-	const cta = buildCtaSlot(contentCell);
+	if (headingEl) bdFT.appendChild(buildTitle(headingEl));
+	bdFT.append(...buildContent(contentCell, headingEl));
+	const cta = buildActions(contentCell);
 	if (cta) bdFT.appendChild(cta);
 	const mediaSlot = buildMediaSlot(mediaCell);
 	if (mediaSlot) bdFT.appendChild(mediaSlot);
 	return bdFT;
 };
 async function decorate(block) {
+	wrapSectionInDsSection(block);
 	const isAlternating = block.classList.contains("alternating");
 	const forceReverse = block.classList.contains("reverse") ? true : null;
 	const rows = Array.from(block.children);

@@ -14,6 +14,8 @@ Adding `loading="lazy"` to offscreen `<video>` and `<audio>` elements instructs 
    - Pair `loading="lazy"` with `preload="none"` when the user must explicitly press play after scrolling to the media, or `preload="metadata"` when duration and initial frame data should populate automatically once the player enters the viewport.
 5. **Handle lazy `autoplay` safely**: When `loading="lazy"` is combined with `autoplay` on a muted `<video>` (or an opt-in `<audio controls>`), playback and downloading wait until the element approaches the viewport. Always respect `@media (prefers-reduced-motion: reduce)` before autoplaying motion media.
 
+If the media is intended to autoplay, with audio playing for longer than 3 seconds then there must be a way to either pause, stop, or independently alter the volume of the audio, in order to adhere to WCAG 1.4.2 Audio Control.
+
 ## Example code
 
 ```html
@@ -118,7 +120,7 @@ reducedMotionQuery.addEventListener('change', (event) => {
 ## Fallback strategy
 
 Browser support for Lazy-loading media: Limited availability.
-Supported by: Chrome 150 and Edge 150.
+Supported by: Chrome 150 (Jun 2026) and Edge 150 (Jul 2026).
 Unsupported in: Firefox and Safari.
 
 If your Baseline target does not support `loading="lazy"` on `<video>` and `<audio>`, choose between progressive enhancement and an `IntersectionObserver` fallback based on how strictly bandwidth must be conserved:

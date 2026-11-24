@@ -67,15 +67,22 @@
     background-color: #f2f2f2;
 }
 
+/* The page column (at :root). Where the block is loaded on its own, without
+   styles.css, the column is undefined and the block's variables above stand in. */
 .system-requirements-wrapper {
-    padding: var(--body-padding);
+    box-sizing: border-box;
+    max-width: var(--page-column-max, none);
+    margin-inline: auto;
+    padding: var(--body-padding) var(--page-column-gutter, var(--body-padding));
 }
 
+/* unscoped, so it reaches every section on the page: on the page column, as
+   styles.css's is, with its own vertical padding */
 .default-content-wrapper {
     width: 100%;
     margin: 0 auto;
-    max-width: var(--body-max-width);
-    padding: var(--body-padding);
+    max-width: var(--page-column-max, var(--body-max-width));
+    padding: var(--body-padding) var(--page-column-gutter, var(--body-padding));
     position: relative;
 }
 
@@ -213,14 +220,6 @@
     text-decoration: underline;
 }
 
-.system-requirements-container.we-container {
-    max-width: 1332px;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin: 0 auto;
-}
-
-
 .system-requirements .info-button-container{
     align-self: baseline;
 }
@@ -231,36 +230,13 @@
 
 @media (min-width: 992px) { /* desktop */
     .system-requirements-wrapper {
-        max-width: var(--section-desktop-max-width);
-        padding: 0 var(--section-desktop-padding);
-        margin: 0 auto;
-    }
-
-    .system-requirements-container.we-container {
-        max-width: 1300px;
-        padding-left: 50px;
-        padding-right: 50px;
+        max-width: var(--page-column-max, var(--section-desktop-max-width));
+        padding-block: 0;
     }
 
     .default-content-wrapper {
-        max-width: var(--section-desktop-max-width);
-        padding: 23px var(--section-desktop-padding);
+        max-width: var(--page-column-max, var(--section-desktop-max-width));
+        padding: 23px var(--page-column-gutter, var(--section-desktop-padding));
         border-radius: 0;
-    }
-}
-
-@media (min-width: 1200px) {
-    .system-requirements-container.we-container {
-        max-width: 1332px;
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-}
-
-@media (min-width: 1600px) {
-    .system-requirements-container.we-container {
-        max-width: 1332px;
-        padding-left: 20px;
-        padding-right: 20px;
     }
 }

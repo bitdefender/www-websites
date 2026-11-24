@@ -5,6 +5,15 @@
   font: italic normal normal 14px/19px var(--body-font-family);
 }
 
+/* the block sits on the page column (at :root) */
+.testimonials-component-wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--page-column-max);
+  margin-inline: auto;
+  padding-inline: var(--page-column-gutter);
+}
+
 .testimonials-component-container h2 {
   font: normal normal bold 32px/37px var(--body-font-family);
 }
@@ -119,8 +128,9 @@
 }
 
 @media (min-width: 768px) {
+  /* a centred measure, no wider than the column */
   .testimonials-component-container .title-class {
-    width: 715px;
+    width: min(715px, 100%);
   }
 
   .testimonials-component-container .reviews-container {
@@ -160,10 +170,6 @@
 }
 
 @media (min-width: 1200px) {
-  .testimonials-component-container .testimonials-component {
-    max-width: 1294px;
-  }
-
   .testimonials-component-container.we-container {
     max-width: 1290px;
     padding-left: 20px;

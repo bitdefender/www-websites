@@ -3,8 +3,9 @@
 }
 
 .multi-carousel {
+    /* the track runs to the page's edge; its first item starts on the page column */
     .carousel-container {
-        padding-left: 20px;
+        padding-left: var(--page-column-inset);
         padding-right: 0;
         display: flex;
         justify-content: right;
@@ -92,10 +93,6 @@
             padding-right: 50px;
         }
 
-        .carousel-container{
-            padding-left: 2%;
-        }
-
         .carousel-dot:last-of-type{
             display: none;
         }
@@ -112,10 +109,6 @@
     }
 
     @media (min-width:1020px){
-        .carousel-container{
-            padding-left: 3%;
-        }
-
         .carousel-item iframe{
             min-width: 400px;
             min-height: 280px;
@@ -123,19 +116,9 @@
     }
 
     @media (min-width:1200px) {
-        .carousel-container{
-            padding-left: 8%;
-        }
-
         .carousel-item iframe {
             min-width: 600px;
             height: 360px;
-        }
-    }
-
-    @media (min-width: 1750px) {
-        .carousel-container{
-            padding-left: 13%;
         }
     }
 }

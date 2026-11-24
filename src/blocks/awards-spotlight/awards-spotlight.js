@@ -5,34 +5,55 @@ import {
 
 /*
  * The Proven section's awards carousel, on the design system's
- * bd-awards-spotlight, under the section header. Authored one award a row:
- * an h3, a paragraph, and the award's mark (a picture), in any cell order.
- * The section's button links (Consumer / Enterprise Recognition), which
- * liftSectionHeader leaves under the header, become primary bd-button-links.
+ * <bd-awards layout="spotlight">, under the section header. Authored one
+ * award a row: an h3, a paragraph, and the award's mark (a picture), in any
+ * cell order; each is a bd-award. The section's button links (Consumer /
+ * Enterprise Recognition), which liftSectionHeader leaves under the header,
+ * become primary bd-buttons.
  */
 
 // The award marks are exported at 1.5x the size the design draws them (160 wide).
 const ASSET_SCALE = 1.5;
 
+// The carousel's and its dots' accessible names: bd-awards has no words of its own
+const LABEL = 'Awards and recognition';
+const ITEM_LABEL = 'Go to award';
+
 const text = (el) => el?.textContent.replace(/\s+/g, ' ').trim() || '';
 
-const readAward = (row) => {
+/** A row as a bd-award: its mark the logo bd-img, its h3 the title, its paragraph the text. */
+const buildAward = (row) => {
   const title = row.querySelector('h1, h2, h3, h4, h5, h6');
   const img = row.querySelector('picture img, img');
   const body = [...row.querySelectorAll('p')].find((p) => text(p) && !p.querySelector('picture, img'));
   if (!title && !img) return null;
 
-  const award = { title: text(title), body: text(body) };
+  const award = document.createElement('bd-award');
   if (img) {
-    award.logo = img.currentSrc || img.src;
-    award.logoAlt = img.getAttribute('alt') || '';
+    const logo = document.createElement('bd-img');
+    logo.slot = 'media';
+    logo.setAttribute('src', img.currentSrc || img.src);
+    logo.setAttribute('alt', img.getAttribute('alt') || '');
     const width = Number(img.getAttribute('width'));
     const height = Number(img.getAttribute('height'));
     if (width && height) {
-      award.logoWidth = Math.round(width / ASSET_SCALE);
-      award.logoHeight = Math.round(height / ASSET_SCALE);
+      logo.setAttribute('width', String(Math.round(width / ASSET_SCALE)));
+      logo.setAttribute('height', String(Math.round(height / ASSET_SCALE)));
     }
+    // a mark is never cropped: it shows whole in the award's column
+    logo.setAttribute('fit', 'contain');
+    award.append(logo);
   }
+  if (text(title)) {
+    // an h3: each award sits under the section's h2
+    const heading = document.createElement('bd-h');
+    heading.slot = 'title';
+    heading.setAttribute('as', 'h3');
+    heading.textContent = text(title);
+    award.append(heading);
+  }
+  // the paragraph is the award's default slot
+  if (text(body)) award.append(text(body));
   return award;
 };
 
@@ -50,8 +71,8 @@ const liftActions = async (block) => {
   actions.className = 'awards-spotlight-actions ds-page-column';
   const buttons = containers.map((container) => {
     const link = container.querySelector('a');
-    const button = document.createElement('bd-button-link');
-    button.setAttribute('variant', 'primary');
+    const button = document.createElement('bd-button');
+    button.setAttribute('appearance', 'primary');
     button.setAttribute('href', link?.getAttribute('href') || '');
     button.textContent = text(link);
     return button;
@@ -75,10 +96,14 @@ export default async function decorate(block) {
   // every frame, so the block asks for it rather than leaving it to metadata
   const header = liftSectionHeader(block, { layout: 'centered' });
 
-  // likely not defined yet: Lit keeps a property set before the upgrade
-  const spotlight = document.createElement('bd-awards-spotlight');
-  spotlight.awards = [...block.children].map(readAward).filter(Boolean);
+  const spotlight = document.createElement('bd-awards');
+  spotlight.setAttribute('layout', 'spotlight');
+  // the awards advance on their own, at the carousel's own pace
   spotlight.setAttribute('autoplay', '');
+  // the carousel has no title of its own to name it: the section header is outside it
+  spotlight.setAttribute('label', LABEL);
+  spotlight.setAttribute('item-label', ITEM_LABEL);
+  spotlight.append(...[...block.children].map(buildAward).filter(Boolean));
   try {
     await load(spotlight);
   } catch (err) {

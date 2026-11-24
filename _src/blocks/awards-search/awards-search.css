@@ -51,7 +51,6 @@ main .section .awards-search .award-search-filter-wrapper .accordion-wrapper {
 
 .awards-search-container {
     padding: 0 var(--body-padding) !important;
-    margin-top: 24px;
 }
 
 main .section .awards-search .awards-results-container .award-item-container {
@@ -231,10 +230,6 @@ main .section .awards-search .awards-results-container .award-results-filters-co
 }
 
 @media (min-width: 990px) {
-    .awards-search-container {
-        margin-top: 64px;
-    }
-
     .awards-search main .section .hero {
         min-height: 8.25rem;
     }

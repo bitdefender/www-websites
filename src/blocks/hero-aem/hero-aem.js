@@ -129,9 +129,35 @@ async function createPricesWebsites(buyLink, bluePillText, saveText, underPriceT
             </div>
           </div>
           <p class="hero-aem__underPriceText">${underPriceText || ''}</p>`;
-  buyLink.setAttribute('data-store-buy-link', trialDuration || '');
-  buyLink.setAttribute('data-store-render', '');
+  // authors may leave the buy link out: the price still shows
+  buyLink?.setAttribute('data-store-buy-link', trialDuration || '');
+  buyLink?.setAttribute('data-store-render', '');
   return pricesBox;
+}
+
+/**
+ * Puts the price box where the author asked for it: an <insert-prices>
+ * paragraph, else before the buy link, else before the first CTA, else at the
+ * end of the card text.
+ * @param {HTMLElement} block the hero-aem block
+ * @param {HTMLElement} priceBox the price box
+ * @param {HTMLAnchorElement | null} buyLink the buy link, if authored
+ */
+function placePriceBox(block, priceBox, buyLink) {
+  const insertPricesParagraph = [...block.querySelectorAll('p')]
+    .findLast((paragraph) => paragraph.textContent.includes('<insert-prices>'));
+  if (insertPricesParagraph) {
+    insertPricesParagraph.replaceWith(priceBox);
+    return;
+  }
+
+  const cardText = block.querySelector('.hero-aem__card-text');
+  const anchor = buyLink?.parentNode || cardText?.querySelector('.button-container');
+  if (anchor) {
+    anchor.before(priceBox);
+  } else {
+    (cardText || block).append(priceBox);
+  }
 }
 
 /**
@@ -208,8 +234,28 @@ export default async function decorate(block, options) {
     block.querySelector('.col-md-6:last-child').appendChild(circleDiscountBox);
   }
 
+  let titleHeading = block.querySelector('h1');
   // Get all the siblings after h1
-  const cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
+  let cardElements = Array.from(block.querySelectorAll('h1 ~ *'));
+
+  // v2: the headings above the card can be any mix of h1/h2 (SEO), so the card goes
+  // after the last of them and classes carry the styling instead of the tag names
+  if (titleHeading && block.closest('.section').classList.contains('hero-aem-v2')) {
+    while (titleHeading.previousElementSibling?.matches('h1, h2')) {
+      titleHeading = titleHeading.previousElementSibling;
+    }
+    titleHeading.classList.add('hero-aem__eyebrow');
+    while (titleHeading.nextElementSibling?.matches('h1, h2')) {
+      titleHeading = titleHeading.nextElementSibling;
+      titleHeading.classList.add('hero-aem__eyebrow');
+    }
+    titleHeading.classList.replace('hero-aem__eyebrow', 'hero-aem__title');
+
+    cardElements = [];
+    for (let el = titleHeading.nextElementSibling; el; el = el.nextElementSibling) {
+      cardElements.push(el);
+    }
+  }
   // Put the siblings in a new div and append it to the block
   const cardElementContainer = createCardElementContainer(cardElements, mobileImage);
   if (product) {
@@ -222,7 +268,7 @@ export default async function decorate(block, options) {
     });
   }
   // Append the container after h1
-  block.querySelector('h1')?.after(cardElementContainer);
+  titleHeading?.after(cardElementContainer);
 
   const desktopImage = block.querySelector('.hero-aem > div > div > picture');
   desktopImage?.classList.add('hero-aem__desktop-image');
@@ -231,25 +277,7 @@ export default async function decorate(block, options) {
 
   if (product && !options) {
     let priceBox = await createPricesWebsites(buyLink, bluePillText, saveText, underPriceText, conditionText, trialDuration);
-    // Select all paragraph elements
-    const paragraphs = document.querySelectorAll('p');
-    let insertPricesParagraph = null;
-
-    // Iterate through the paragraphs
-    paragraphs.forEach((paragraph) => {
-      // Check if the paragraph contains the text <insert-prices>
-      if (paragraph.textContent.includes('<insert-prices>')) {
-        // Perform any additional actions here
-        insertPricesParagraph = paragraph;
-      }
-    });
-
-    if (insertPricesParagraph) {
-      insertPricesParagraph.replaceWith(priceBox);
-    } else {
-      buyLink.parentNode.parentNode.insertBefore(priceBox, buyLink.parentNode);
-    }
-
+    placePriceBox(block, priceBox, buyLink);
     pricesContainers.set(product, priceBox);
   }
 

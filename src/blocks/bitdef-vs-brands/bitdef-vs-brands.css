@@ -5,8 +5,12 @@
   align-items: center;
 }
 
+/* the block sits on the page column (at :root) */
 .bitdef-vs-brands-wrapper {
-  padding: 0 var(--body-padding);
+  box-sizing: border-box;
+  max-width: var(--page-column-max);
+  margin-inline: auto;
+  padding-inline: var(--page-column-gutter);
 }
 
 .bitdef-vs-brands .heading-container {
@@ -178,15 +182,8 @@
     }
   }
 
-  .bitdef-vs-brands-wrapper {
-    max-width: var(--section-desktop-max-width);
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
-  }
-
+  /* a narrower measure, centred on the column */
   .bitdef-vs-brands-container.smaller-container .bitdef-vs-brands-wrapper {
     max-width: var(--section-desktop-smaller-max-width);
-    padding: 0 var(--section-desktop-padding);
-    margin: 0 auto;
   }
 }

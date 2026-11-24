@@ -1,46 +1,27 @@
-import{a as e,n as t,t as n,u as r}from"../../../../../lit/index.js";import{n as i}from"../../../../../lit/decorators.js";import{n as a,t as o}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import"../heading/heading.js";import"../shared/token-scales.js";import"../paragraph/paragraph.js";import{t as s}from"../shared/ensemble.css.js";import"../button/button.js";import"../icons/arrow-right-icon.js";var c=r`:host{font-family:var(--typography-fontFamily-sans);display:block}.bd-agentendpoints-wrapper{padding-block:var(--spacing-48);box-sizing:border-box}.bd-agentendpoints-eyebrow{margin:0 0 var(--spacing-8);color:var(--color-text-brand);display:block}.bd-agentendpoints-title{margin:0 0 var(--spacing-16);display:block}.bd-agentendpoints-description{margin:0 0 var(--spacing-24);color:var(--color-text-muted);max-width:var(--content-width-readable);display:block}.bd-agentendpoints-row{gap:var(--spacing-12);margin-bottom:var(--spacing-12);flex-wrap:wrap;display:flex}.bd-agentendpoints-row:last-of-type{margin-bottom:0}.bd-agentendpoints-mono{font-family:var(--typography-fontFamily-mono)}.bd-agentendpoints-icon{flex-shrink:0;display:block}@media (width<576px){.bd-agentendpoints-wrapper{padding:var(--spacing-32) var(--spacing-24)}}`,l=class extends n{constructor(...e){super(...e),this.eyebrow=``,this.title=``,this.description=``,this.endpoints=[],this.assistants=[]}static{this.styles=[s,c]}render(){return e`
+import{a as e,t,u as n}from"../../../../../lit/index.js";import"../shared/token-scales.js";import{n as r,t as i}from"../../_bundled/oxc-project_runtime/helpers/esm/decorate.js";import"../../tokens/tokens.js";import"../p/p.js";import{t as a}from"../shared/controller.slot.js";import"../h/h.js";import{t as o}from"../shared/ensemble.css.js";import"../button/button.js";import"../icons/arrow-right.js";import"../img/img.js";import{t as s}from"../shared/adopt-styles.js";var c=n`:where(bd-agent-endpoints)>bd-button[slot=endpoints]::part(button){font-family:var(--typography-fontFamily-mono)}:where(bd-agent-endpoints)>bd-button[slot=endpoints]>bd-icon[slot=start][size=xs]{--bd-icon-size:var(--icon-xs-size)}`,l=n`:host{font-family:var(--typography-fontFamily-sans);display:block}.bd-agentendpoints-wrapper{padding-block:var(--spacing-48);box-sizing:border-box}.bd-agentendpoints-eyebrow{margin:0 0 var(--spacing-8);color:var(--color-text-brand);font-family:var(--typography-label-large-fontFamily);font-size:var(--typography-label-large-fontSize);font-weight:var(--typography-label-large-fontWeight);line-height:var(--typography-label-large-lineHeight);letter-spacing:var(--typography-label-large-letterSpacing)}.bd-agentendpoints-title{margin:0 0 var(--spacing-16)}.bd-agentendpoints-title ::slotted([slot=title]){--bd-heading-font-size:var(--typography-heading-h2-fontSize);--bd-heading-font-weight:var(--typography-heading-h2-fontWeight);--bd-heading-line-height:var(--typography-heading-h2-lineHeight);--bd-heading-letter-spacing:var(--typography-heading-h2-letterSpacing);--bd-heading-font-family:var(--typography-heading-h2-fontFamily)}.bd-agentendpoints-description{margin:0 0 var(--spacing-24);max-width:var(--content-width-readable)}.bd-agentendpoints-description ::slotted([slot=description]){--bd-heading-color:var(--color-text-muted);--bd-paragraph-color:var(--color-text-muted)}.bd-agentendpoints-description ::slotted(bd-p[slot=description]){--bd-paragraph-font-size:var(--typography-body-regular-fontSize);--bd-paragraph-font-weight:var(--typography-body-regular-fontWeight);--bd-paragraph-line-height:var(--typography-body-regular-lineHeight);--bd-paragraph-letter-spacing:var(--typography-body-regular-letterSpacing)}.bd-agentendpoints-rows{gap:var(--spacing-12);flex-direction:column;display:flex}.bd-agentendpoints-row{gap:var(--spacing-12);flex-wrap:wrap;display:flex}.bd-agentendpoints-row[hidden]{display:none}@media (width<992px){.bd-agentendpoints-eyebrow{font-size:var(--typography-label-default-fontSize);font-weight:var(--typography-label-default-fontWeight);line-height:var(--typography-label-default-lineHeight);letter-spacing:var(--typography-label-default-letterSpacing)}}@media (width<576px){.bd-agentendpoints-wrapper{padding:var(--spacing-32) var(--spacing-24)}}`,u=class extends t{constructor(...e){super(...e),this._slots=new a(this,{slots:[`eyebrow`,`title`,`description`,`endpoints`,`assistants`,``]})}static{this.styles=[o,l]}connectedCallback(){super.connectedCallback(),s(this,`bd-agent-endpoints`,c)}render(){return e`
       <div class="bd-ensemble bd-agentendpoints-wrapper">
-        ${this.eyebrow?e`<bd-p variant="eyebrow" class="bd-agentendpoints-eyebrow"><slot name="eyebrow">${this.eyebrow}</slot></bd-p>`:t}
+        <div class="bd-agentendpoints-eyebrow" ?hidden=${!this._slots.has(`eyebrow`)}>
+          <slot name="eyebrow"></slot>
+        </div>
 
-        ${this.title?e`<bd-h as="h2" class="bd-agentendpoints-title"><slot name="title">${this.title}</slot></bd-h>`:t}
+        <div class="bd-agentendpoints-title" ?hidden=${!this._slots.has(`title`)}>
+          <slot name="title"></slot>
+        </div>
 
-        ${this.description?e`<bd-p variant="regular" class="bd-agentendpoints-description"><slot name="description">${this.description}</slot></bd-p>`:t}
+        <div class="bd-agentendpoints-description" ?hidden=${!this._slots.has(`description`)}>
+          <slot name="description"></slot>
+        </div>
 
-        ${this.endpoints&&this.endpoints.length?e`
-              <div class="bd-agentendpoints-row">
-                ${this.endpoints.map(t=>e`
-                    <bd-button-link
-                      class="bd-agentendpoints-pill"
-                      href=${t.href}
-                      target="_blank"
-                      size="sm"
-                      variant="tertiary"
-                    >
-                      <bd-arrow-right-icon class="bd-agentendpoints-arrow" size="xs" aria-hidden="true"></bd-arrow-right-icon>
-                      <span class="bd-agentendpoints-mono">${t.label}</span>
-                    </bd-button-link>
-                  `)}
-              </div>
-            `:t}
-
-        ${this.assistants&&this.assistants.length?e`
-              <div class="bd-agentendpoints-row">
-                ${this.assistants.map(n=>e`
-                    <bd-button-link
-                      class="bd-agentendpoints-pill"
-                      href=${n.href}
-                      target="_blank"
-                      size="sm"
-                      variant="tertiary"
-                      label="${n.label} (opens in new tab)"
-                    >
-                      ${n.icon?e`<img src=${n.icon} alt="" class="bd-agentendpoints-icon" width="20" height="20" loading="lazy" />`:t}
-                      <span>${n.label}</span>
-                    </bd-button-link>
-                  `)}
-              </div>
-            `:t}
-
-        <slot name="rows"></slot>
+        <div class="bd-agentendpoints-rows">
+          <div class="bd-agentendpoints-row" ?hidden=${!this._slots.has(`endpoints`)}>
+            <slot name="endpoints"></slot>
+          </div>
+          <div class="bd-agentendpoints-row" ?hidden=${!this._slots.has(`assistants`)}>
+            <slot name="assistants"></slot>
+          </div>
+          <div class="bd-agentendpoints-more" ?hidden=${!this._slots.has(``)}>
+            <slot></slot>
+          </div>
+        </div>
       </div>
-    `}};o([i({type:String})],l.prototype,`eyebrow`,void 0),o([i({type:String})],l.prototype,`title`,void 0),o([i({type:String})],l.prototype,`description`,void 0),o([i({type:Array})],l.prototype,`endpoints`,void 0),o([i({type:Array})],l.prototype,`assistants`,void 0),l=o([a(`bd-agent-endpoints`)],l);
+    `}};u=i([r(`bd-agent-endpoints`)],u);export{u as BdAgentEndpoints};

@@ -61,10 +61,11 @@ main .hero-dropdown-container>div {
   max-width: unset;
 }
 
+/* the section also carries the hero-dropdown class (and so the block's padding): put it back on
+   the page's section rhythm, so the hero sits a section padding below the bar like other heroes */
 main .hero-dropdown-container {
-  padding: 0;
+  padding: var(--page-section-padding) 0;
   margin: 0 auto;
-  margin-bottom: 20px;
 }
 
 main .hero-dropdown-container.blue-title .hero-dropdown-content>div {
@@ -94,9 +95,11 @@ main .hero-dropdown .hero-dropdown-content > div {
   width: 100%;
 }
 
+/* the block is a card on the page column's content edges (the column at :root);
+   its copy keeps its own inset inside it */
 main .hero-dropdown-container .hero-dropdown-wrapper {
-  padding: 0;
-  max-width: 1300px;
+  padding: 0 var(--page-column-gutter);
+  max-width: var(--page-column-max);
   margin: auto;
 }
 
@@ -219,7 +222,6 @@ main .hero-dropdown .hero-dropdown-content {
 }
 
 main .hero-dropdown.new2024design {
-  max-width: 1200px;
   margin: auto;
 }
 
@@ -779,7 +781,6 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
 
 .hero-dropdown-container .hero-dropdown.block.grey-background {
   width: 100%;
-  max-width: 1350px;
   border-bottom-left-radius: 20px;
 
   h3, strong {
@@ -830,6 +831,11 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
 .hero-dropdown.small-business-banner {
   background-color: transparent;
 
+  /* no card behind the text: it starts on the page column's edge, like the sections below */
+  .hero-dropdown-content {
+    padding-inline: 0;
+  }
+
   p {
     font-size: 16px;
   }
@@ -840,16 +846,12 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
     margin-top: 12px;
   }
 
-  .signature {
+  .hero-dropdown-content .signature {
+    margin-top: 0;
     font-size: 24px;
     color: #016DFF;
     font-weight: bold;
     font-family: var(--body-font-family);
-    padding-left: 50px;
-
-    @media (max-width: 767px) {
-      padding-left: 20px;
-    }
   }
 
   .hero-dropdown-picture {
@@ -884,6 +886,15 @@ main .hero-dropdown .selected-option.open .dropdown-arrow {
 
   a.button.modal {
     padding: 10px 26px 8px 30px;
+  }
+
+  /* on mobile each button runs the text column's full width */
+  @media (width < 767px) {
+    a.button {
+      box-sizing: border-box;
+      width: 100%;
+      margin-right: 0;
+    }
   }
 }
 

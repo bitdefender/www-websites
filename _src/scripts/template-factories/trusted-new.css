@@ -150,7 +150,7 @@ hr {
   font-weight: 600;
   gap: 15px;
   padding: 4px 17px 4px 4px;
-  right: max(50px, calc((100% - 1332px) / 2 + 50px));
+  right: var(--page-column-inset);
   top: 85%;
   width: fit-content;
   align-self: center;
@@ -346,13 +346,90 @@ hr {
   font-family: var(--body-font-family);
 }
 
-.trusted-new main > .section {
-  box-sizing: border-box;
-}
 
 .trusted-new main > .section:empty {
   display: none;
 }
+
+/* An exception page: trusted keeps the site's section spacing and type from before the design
+   system rhythm (styles.css leaves this template out of its rhythm rules); only its widths
+   follow the page column. Sections pad 32px, 48px from 992px, 60px from 1400px; pt-0, pb-0
+   and py-0 take that padding off (:where() keeps pt-0 below the template's own paddings). */
+.trusted-new main > .section {
+  box-sizing: border-box;
+}
+
+/* :where() keeps these at main .section's specificity, under any section's own padding */
+.trusted-new main > :where(.section) {
+  padding-block: 32px;
+}
+
+@media (width >= 992px) {
+  .trusted-new main > :where(.section) {
+    padding-block: 48px;
+  }
+}
+
+@media (width >= 1400px) {
+  .trusted-new main > :where(.section) {
+    padding-block: 60px;
+  }
+}
+
+.trusted-new main > :where(.section.pt-0) {
+  padding-top: 0;
+}
+
+.trusted-new main > :where(.section.py-0) {
+  padding-top: 0 !important;
+}
+
+.trusted-new main > :where(.section.pb-0, .section.py-0) {
+  padding-bottom: 0 !important;
+}
+
+/* below desktop the parts keep their 20px inset above and below (above, for columns on mobile) */
+@media (width < 992px) {
+  .trusted-new main .default-content-wrapper {
+    padding-block: 20px;
+  }
+}
+
+@media (width < 768px) {
+  .trusted-new main .columns-wrapper {
+    padding-top: 20px;
+  }
+}
+
+/* headings keep the site's weights (500, authored bold in them stays bold) and h2's line height */
+:where(.trusted-new) :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: var(--font-weight-bold);
+}
+
+:where(.trusted-new) h2 {
+  line-height: 1.2;
+}
+
+:where(.trusted-new) :is(h1, h2, h3, h4, h5, h6) :is(b, strong) {
+  font-weight: var(--font-weight-boldest);
+}
+
+/* a block that wraps itself in the design system's bd-section (the FAQ) adds no padding of its own */
+.trusted-new main .section > bd-section {
+  padding-block: 0;
+}
+
+.trusted-new .tabs-component-container .title-class {
+  font: normal normal bold 32px/37px var(--body-font-family);
+}
+
+@media (width >= 992px) {
+  .trusted-new .columns-container .columns.benefits-cards.scam-protection > div:last-child {
+    margin-bottom: 30px;
+  }
+}
+
+/* the page column (at :root in styles.css) */
 .trusted-new main .default-content-wrapper,
 .trusted-new main .testimonials-wrapper,
 .trusted-new main .timeline-carousel-wrapper,
@@ -361,13 +438,20 @@ hr {
 .trusted-new main .scuderia-ferrari-section-wrapper {
   box-sizing: border-box;
   margin-inline: auto;
-  padding-inline: 50px;
-  max-width: 1332px;
+  padding-inline: var(--page-column-gutter);
+  max-width: var(--page-column-max);
 }
 
 .trusted-new main .section.light-sky-blue, .trusted-new main .section.light-sky-blue .default-content-wrapper {
   background-color: #EFF6FF;
   text-align: left;
+}
+
+/* The template paints a light-sky-blue section whole, so its wrappers are the
+   page column, not the panels on it that styles.css makes of painted wrappers. */
+.trusted-new main .section.light-sky-blue > div {
+  width: 100%;
+  max-width: var(--page-column-max);
 }
 
 .trusted-new main .section.light-sky-blue.columns-container {
@@ -481,10 +565,6 @@ hr {
 
 .trusted-new main > .trusted-teaser-impact-container.pb-0 {
   display: none;
-}
-
-.trusted-new main > .trusted-teaser-impact-container .trusted-teaser-impact-wrapper {
-  padding-inline: 50px;
 }
 
 .trusted-new main > .trusted-teaser-impact-container .carousel-header {
@@ -689,10 +769,6 @@ hr {
   padding-block: 16px 88px;
 }
 
-.trusted-new main > .timeline-carousel-container .timeline-carousel-wrapper {
-  padding-inline: 50px;
-}
-
 .trusted-new main > .timeline-carousel-container .timeline-controls {
   gap: 10px;
   margin-bottom: 34px;
@@ -723,7 +799,6 @@ hr {
 
 .trusted-new main > .trusted-main-carousel-container.blue-background .trusted-main-carousel-wrapper {
   background: transparent;
-  padding-inline: 50px;
   padding-top: 0;
 }
 
@@ -964,10 +1039,6 @@ hr {
   background: #fff;
 }
 
-.trusted-new main > .image-columns-container .image-columns-wrapper {
-  padding-inline: 50px;
-}
-
 .trusted-new main > .image-columns-container > .default-content-wrapper {
   align-items: center;
   display: flex;
@@ -1086,23 +1157,6 @@ hr {
 }
 
 @media (max-width: 991px) {
-  .trusted-new main .default-content-wrapper,
-  .trusted-new main .trusted-teaser-impact-wrapper,
-  .trusted-new main .testimonials-wrapper,
-  .trusted-new main .timeline-carousel-wrapper,
-  .trusted-new main .trusted-main-carousel-wrapper,
-  .trusted-new main .image-columns-wrapper,
-  .trusted-new main .scuderia-ferrari-section-wrapper {
-    padding-inline: 24px;
-  }
-
-  .trusted-new main > .trusted-teaser-impact-container .trusted-teaser-impact-wrapper,
-  .trusted-new main > .timeline-carousel-container .timeline-carousel-wrapper,
-  .trusted-new main > .trusted-main-carousel-container.blue-background .trusted-main-carousel-wrapper,
-  .trusted-new main > .image-columns-container .image-columns-wrapper {
-    padding-inline: 24px;
-  }
-
   .trusted-new main > .trusted-teaser-impact-container .box-wrapper {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1124,10 +1178,6 @@ hr {
 
   .trusted-new main > .trusted-main-carousel-container .content-wrapper .slide {
     gap: 28px;
-  }
-
-  .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted {
-    padding-inline: 34px;
   }
 
   .trusted-new main > .scuderia-ferrari-section-container .scuderia-ferrari-section.quotes-left.trusted img {
@@ -1164,10 +1214,6 @@ hr {
   .trusted-new main > .light-sky-blue,
   .trusted-new main > .image-columns-container {
     padding-block: 0;
-  }
-
-  .trusted-new main > .trusted-teaser-impact-container .trusted-teaser-impact-wrapper {
-    padding-inline: 0;
   }
 
   .trusted-new main > .trusted-teaser-impact-container .carousel-header .title h2,
@@ -1288,7 +1334,6 @@ hr {
 
   .trusted-new .trusted-hero-container .play-btn {
     bottom: 24px;
-    right: 24px;
   }
 }
 

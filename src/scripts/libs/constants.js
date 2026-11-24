@@ -101,10 +101,9 @@ export class Constants {
 	static async #getVlaicuProductIdsMapping() {
 		try {
 			const nameForVlaicuConfig = this.ZUROA_LOCALES.includes(page.locale) ? "vlaicuconfigzuora" : "vlaicuconfig";
-			const IS_INSIDE_OAI_WINDOW = window.location.href.includes('oaiusercontent');
-			const baseUrl = IS_INSIDE_OAI_WINDOW
-				? `https://www.bitdefender.com/common/vlaicuconfig/`
-				: `/common/vlaicuconfig/`;
+			// resolve against this module's origin, not the page's: www-landing-pages (fragment-ext)
+			// imports this file cross-origin, and its origins don't serve /common/
+			const baseUrl = `${new URL(import.meta.url).origin}/common/vlaicuconfig/`;
 			const response = await fetch(`${baseUrl}${nameForVlaicuConfig}.json`);
 			if (!response.ok) {
 				console.error(`Failed to fetch data.`);

@@ -5,13 +5,15 @@
         font-family: var(--body-font-family);
     }
 
+    /* the page column (at :root in styles.css); the track runs on past its
+       right edge, and the section clips it at the page's */
     .cards-carousel-wrapper {
-        max-width: 1290px;
-        margin: auto;
+        box-sizing: border-box;
+        max-width: var(--page-column-max);
+        margin-inline: auto;
+        padding-inline: var(--page-column-gutter);
 
         .cards-carousel {
-            padding: 0 24px;
-
             .carousel-track {
                 .cards-container {
                     display: grid;
@@ -185,7 +187,6 @@
 
         .cards-carousel-wrapper {
             margin-top: 40px;
-            max-width: 1232px;
 
             .cards-carousel {
                 .navigation {
@@ -315,8 +316,6 @@
 
         .cards-carousel-wrapper {
             .cards-carousel {
-                padding: 0;
-
                 .carousel-track {
                     .cards-container {
                         gap: 32px;

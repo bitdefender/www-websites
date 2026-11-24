@@ -1,0 +1,64 @@
+/*
+ * TODO(DEX-29605): remove after Black Friday 2026 (ends 2 Dec 2026, 11:00), with the rest of
+ * scripts/black-friday/ (see ribbon.js). The ribbon, styled as in the Target activity.
+ */
+.news-bar-container.bf-25 {
+    .news-bar-wrapper {
+        padding: 5px 0;
+    }
+
+    .news-bar {
+        background: black url("images/ribbon-pattern.png");
+
+        a.bf-ribbon-link {
+            align-self: stretch;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+        }
+    }
+
+    .bf-text-area {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        @media (max-width: 500px) {
+            padding: 0 10px;
+        }
+    }
+
+    .bf-discount-logo {
+        width: 20px;
+        height: 23px;
+    }
+
+    .bf-text {
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        margin: 0;
+
+        .await-loader {
+            min-height: auto;
+            color: transparent;
+        }
+    }
+
+    /* until the store renders the discount, and when there is none */
+    .bf-subtext:has([data-store-context-discount]:empty) {
+        display: none;
+    }
+
+    &.no-spacing {
+        padding: 0;
+
+        .news-bar-wrapper {
+            padding: 0;
+        }
+    }
+}

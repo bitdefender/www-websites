@@ -245,7 +245,8 @@ export default function decorate(block) {
   if (signature) {
     const signatureElement = createTag('div', { class: 'signature' });
     signatureElement.textContent = signature;
-    document.querySelector('div.hero-dropdown div div:first-child').prepend(signatureElement);
+    // in the text column, so it lines up with the title at every width
+    (block.querySelector('.hero-dropdown-content > div') || block).prepend(signatureElement);
   }
 
   if (contentsize) {
