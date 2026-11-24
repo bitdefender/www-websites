@@ -3224,30 +3224,34 @@ main .creators-banner .signature {
 
   /* the even columns list what's missing: an x-circle in the button red */
   &.checked-unchecked {
-    background-color: var(--color-dark-gray);
+    background-color: var(--gray-color);
 
-    .columns > div > div:last-of-type {
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
+    .columns > div {
+      align-items: baseline;
 
-    li {
-      position: relative;
-      padding-left: 28px;
+      > div:last-of-type {
+        ul {
+          list-style: none;
+          padding-left: 0;
+        }
 
-      &::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0.15em;
-        width: 15px;
-        height: 15px;
-        background-color: var(--color-dark-gray);
-        mask: url("/_src/icons/x-circle.svg") no-repeat center / contain;
+        li {
+          position: relative;
+          padding-left: 28px;
+
+          &::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.15em;
+            width: 15px;
+            height: 15px;
+            background-color: var(--color-dark-gray);
+            mask: url("/_src/icons/x-circle.svg") no-repeat center / contain;
+          }
+        }
       }
     }
-  }
   }
 
   @media (min-width: 576px) {
