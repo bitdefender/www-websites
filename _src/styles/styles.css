@@ -953,6 +953,10 @@ main .section.blue-heading h3{
   color: #006EFF;
 }
 
+main .section.blue-heading-4 h4 {
+  color: var(--color-highlight-blue);
+}
+
 main .section.blue-title {
   text-align: left;
   
