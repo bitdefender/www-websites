@@ -1,26 +1,56 @@
 import { liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/post-feed/post-feed.js
-var DESKTOP = "(min-width: 992px)";
+var READ_MORE = "Read more";
 var text = (el) => el?.textContent.replace(/\s+/g, " ").trim() || "";
+var slotted = (tag, slot, words) => {
+	const el = document.createElement(tag);
+	el.slot = slot;
+	el.textContent = words;
+	return el;
+};
+var buildCover = (row) => {
+	const picture = row.querySelector("picture");
+	const img = picture?.querySelector("img");
+	const webp = picture?.querySelector("source[type=\"image/webp\"]:not([media])")?.getAttribute("srcset");
+	const src = img?.currentSrc || webp || img?.getAttribute("src");
+	if (!img || !src) return null;
+	const cover = document.createElement("bd-img");
+	cover.slot = "media";
+	cover.setAttribute("src", src);
+	[
+		"width",
+		"height",
+		"loading"
+	].forEach((name) => {
+		if (img.hasAttribute(name)) cover.setAttribute(name, img.getAttribute(name));
+	});
+	cover.setAttribute("alt", "");
+	return cover;
+};
 var buildCard = (row) => {
 	const heading = row.querySelector("h1, h2, h3, h4, h5, h6");
 	const link = heading?.querySelector("a") || row.querySelector("a");
 	if (!heading && !link) return null;
 	const category = [...row.querySelectorAll("p")].find((p) => text(p) && !p.querySelector("picture") && !p.contains(link));
 	const card = document.createElement("bd-post-card");
-	card.setAttribute("heading", text(heading || link));
-	if (heading) card.setAttribute("as", heading.tagName.toLowerCase());
 	if (link) card.setAttribute("href", link.getAttribute("href") || "");
-	if (category) card.setAttribute("badge", text(category));
+	const cover = buildCover(row);
+	if (cover) card.append(cover);
+	if (category) {
+		const badge = slotted("bd-badge", "badge", text(category));
+		[
+			["variant", "info"],
+			["appearance", "shade"],
+			["size", "sm"]
+		].forEach(([name, value]) => badge.setAttribute(name, value));
+		card.append(badge);
+	}
+	const title = slotted("bd-h", "title", text(heading || link));
+	title.setAttribute("as", heading ? heading.tagName.toLowerCase() : "h3");
+	card.append(title);
+	if (link) card.append(slotted("span", "read-more", READ_MORE));
 	return card;
-};
-var addCover = (card, row) => {
-	const picture = row.querySelector("picture");
-	if (!picture) return;
-	picture.setAttribute("slot", "image");
-	picture.querySelector("img")?.setAttribute("alt", "");
-	card.append(picture);
 };
 async function decorate(block) {
 	wrapSectionInDsSection(block);
@@ -31,17 +61,10 @@ async function decorate(block) {
 		["cols", "1"],
 		["cols-sm", "1"],
 		["cols-md", "1"],
-		["cols-lg", "3"]
+		["cols-lg", "3"],
+		["gap", "md"]
 	].forEach(([name, value]) => grid.setAttribute(name, value));
-	const desktop = window.matchMedia?.(DESKTOP);
-	const setGap = () => grid.setAttribute("gap", !desktop || desktop.matches ? "md" : "sm");
-	setGap();
-	desktop?.addEventListener("change", setGap);
-	const posts = [...block.children].map((row) => ({
-		row,
-		card: buildCard(row)
-	})).filter(({ card }) => card);
-	grid.append(...posts.map(({ card }) => card));
+	grid.append(...[...block.children].map(buildCard).filter(Boolean));
 	try {
 		await load(grid);
 	} catch (err) {
@@ -49,7 +72,6 @@ async function decorate(block) {
 		await header;
 		return;
 	}
-	posts.forEach(({ row, card }) => addCover(card, row));
 	block.replaceChildren(grid);
 	await header;
 }

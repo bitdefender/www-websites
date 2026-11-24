@@ -45,8 +45,11 @@ const FEEDS = {
   ]),
 };
 
-async function renderFixture() {
-  const html = await readFile(path.join(__dirname, 'blog-news.mock.html'), 'utf-8');
+async function renderFixture({ buttonText } = {}) {
+  let html = await readFile(path.join(__dirname, 'blog-news.mock.html'), 'utf-8');
+  if (buttonText) {
+    html = html.replace('<div class="section-metadata">', `<div class="section-metadata"><div><div>Button-text</div><div>${buttonText}</div></div>`);
+  }
   document.body.innerHTML = `<main>${html}</main>`;
   const main = document.querySelector('main');
 
@@ -98,22 +101,73 @@ describe('blog-news block, multi-endpoint', () => {
     expect(grid.getAttribute('cols-lg')).toBe('3');
   });
 
+  it('spaces the cards by the grid\'s md gap at every width', () => {
+    expect(grid.getAttribute('gap')).toBe('md');
+    ['gap-sm', 'gap-md', 'gap-lg'].forEach((name) => expect(grid.hasAttribute(name)).toBe(false));
+  });
+
+  it('joins the section to the design system\'s rhythm', () => {
+    expect(block.closest('.section').querySelector(':scope > bd-section')).not.toBeNull();
+    expect(block.closest('bd-section')).not.toBeNull();
+  });
+
   it('takes the newest post of each feed, up to Articles-number', () => {
-    expect(cards.map((card) => card.getAttribute('heading'))).toEqual([
+    const titles = cards.map((card) => card.querySelector(':scope > bd-h[slot="title"]'));
+    expect(titles.map((title) => title.textContent)).toEqual([
       'Where to report a scam', 'Your attack surface is growing', 'The rise of Midnight Mimosa',
     ]);
+    // h3, under the section's h2
+    expect(titles.every((title) => title.getAttribute('as') === 'h3')).toBe(true);
     expect(cards[0].getAttribute('href')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/report-a-scam/');
-    expect(cards[0].getAttribute('image')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/report-a-scam/cover.jpg');
+    const cover = cards[0].querySelector(':scope > bd-img[slot="media"]');
+    expect(cover.getAttribute('src')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/report-a-scam/cover.jpg');
+    // decorative, since the title beside it names the post, and lazy
+    expect(cover.getAttribute('alt')).toBe('');
+    expect(cover.getAttribute('loading')).toBe('lazy');
+    // the copy is in the card's slots; the card carries only its link
+    cards.forEach((card) => {
+      expect(card.getAttributeNames()).toEqual(['href']);
+    });
   });
 
   it('badges each card with its feed\'s channel title', () => {
-    expect(cards.map((card) => card.getAttribute('badge'))).toEqual([
+    const badges = cards.map((card) => card.querySelector(':scope > bd-badge[slot="badge"]'));
+    expect(badges.map((badge) => badge.textContent)).toEqual([
       'Consumer Insights', 'Business Insights Cybersecurity Blog by Bitdefender', 'Bitdefender Labs',
     ]);
+    // the feed in the card's badge look: info, shade, small
+    badges.forEach((badge) => {
+      expect(badge.getAttribute('variant')).toBe('info');
+      expect(badge.getAttribute('appearance')).toBe('shade');
+      expect(badge.getAttribute('size')).toBe('sm');
+    });
+  });
+
+  it('writes the read-more cue where Button-text is unset', () => {
+    expect(cards.map((card) => card.querySelector(':scope > span[slot="read-more"]')?.textContent))
+      .toEqual(['Read more', 'Read more', 'Read more']);
   });
 
   it('lifts the section header', () => {
     const header = block.closest('.section').querySelector('bd-section-header');
-    expect(header.getAttribute('heading')).toBe('Latest cybersecurity insights');
+    const title = header.querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('Latest cybersecurity insights');
+    expect(title.getAttribute('as')).toBe('h2');
+  });
+});
+
+describe('blog-news block, multi-endpoint with Button-text', () => {
+  afterAll(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('writes the section\'s Button-text as each card\'s read-more cue', async () => {
+    vi.spyOn(window, 'fetch').mockImplementation(async (url) => {
+      const feed = Object.keys(FEEDS).find((name) => String(url).includes(`/rss/${name}/`));
+      return new Response(FEEDS[feed], { status: 200, headers: { 'Content-Type': 'text/xml' } });
+    });
+    const block = await renderFixture({ buttonText: 'Read the story' });
+    const cues = [...block.querySelectorAll('bd-post-card > span[slot="read-more"]')];
+    expect(cues.map((cue) => cue.textContent)).toEqual(['Read the story', 'Read the story', 'Read the story']);
   });
 });

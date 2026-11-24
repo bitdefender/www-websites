@@ -13,12 +13,22 @@
     margin-top: 24px;
     margin-top: 0!important;
 
-    @media (max-width: 768px) {
-        padding-right: 20px !important;
-        padding-left: 20px !important;
+    * {box-sizing: unset;}
+
+    /* the page column (at :root in styles.css); the grid keeps its own width, centred in it */
+    > .default-content-wrapper,
+    > .subscriber-custom-content-wrapper {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: var(--page-column-max);
+        padding-inline: var(--page-column-gutter);
     }
 
-    * {box-sizing: unset;}
+    > .subscriber-custom-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
     svg {
         display: block;

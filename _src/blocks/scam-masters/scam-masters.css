@@ -20,15 +20,29 @@ body:has(.scam-masters-container) {
     --color-bd-blue: #006EFF;
 
     background-color: var(--color-bd-blue);
-    padding: 60px !important;
+    padding: 60px 0 !important;
+
+    /* the page column (at :root in styles.css), on the section's blue ground */
+    > .scam-masters-wrapper {
+        box-sizing: border-box;
+        max-width: var(--page-column-max);
+        margin-inline: auto;
+        padding-inline: var(--page-column-gutter);
+    }
 
     &.acq-quiz {
         background-color: white;
         transition: opacity 0.25s, height 0.25s, display 0.25s allow-discrete;
         padding-top: 5px !important;
 
+        /* below 992 its start page is a band as wide as the page */
         @media (max-width: 992px) {
             padding: 0 !important;
+
+            > .scam-masters-wrapper {
+                max-width: none;
+                padding-inline: 0;
+            }
         }
     }
 }
@@ -930,7 +944,7 @@ body:has(.scam-masters-container) {
 
 @media (max-width: 992px) {
     .scam-masters-container {
-        padding: 15px !important;
+        padding: 15px 0 !important;
     }
 
     .scam-masters {
@@ -988,7 +1002,7 @@ body:has(.scam-masters-container) {
 
 @media (max-width: 767px) {
     .scam-masters-container {
-        padding: 15px !important;
+        padding: 15px 0 !important;
     }
 
     .scam-masters {

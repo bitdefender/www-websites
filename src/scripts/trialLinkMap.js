@@ -1,15 +1,41 @@
 const SUBSCRIPTION_MONTHS = 12;
 const DEFAULT_CAMPAIGN = 'default';
 
+const TRIAL_LINKS_URL = 'https://www.bitdefender.com/common/triallinks.json';
+
+const warnNoTrials = (reason, error) => {
+  // eslint-disable-next-line no-console
+  console.warn(`Trial links: ${reason}, continuing without them.`, ...(error ? [error] : []));
+};
+
+/**
+ * Fetches the trial links sheet. Never rejects: store.js awaits this at the top level,
+ * so a failure here (CORS on previews and localhost, network errors) would blank the page.
+ * On any failure it warns and returns an empty list; only trial CTAs lose their mapping.
+ *
+ * @returns {Promise<Array<Record<string, string>>>}
+ */
 const getTrials = async () => {
-  const res = await fetch('https://www.bitdefender.com/common/triallinks.json');
-  if (!res.ok) {
+  let res;
+  try {
+    res = await fetch(TRIAL_LINKS_URL);
+  } catch (error) {
+    warnNoTrials(`request to ${TRIAL_LINKS_URL} failed`, error);
     return [];
   }
 
-  const { data = [] } = await res.json();
+  if (!res.ok) {
+    warnNoTrials(`${TRIAL_LINKS_URL} answered ${res.status}`);
+    return [];
+  }
 
-  return data;
+  try {
+    const { data } = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    warnNoTrials(`${TRIAL_LINKS_URL} returned invalid JSON`, error);
+    return [];
+  }
 };
 
 const getLocale = () => {

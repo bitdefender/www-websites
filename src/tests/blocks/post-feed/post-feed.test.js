@@ -57,22 +57,62 @@ describe('post-feed block', () => {
     expect(grid.getAttribute('cols-lg')).toBe('3');
   });
 
-  it('builds a card per row: category badge, heading and the heading link', () => {
-    expect(cards.map((card) => card.getAttribute('badge'))).toEqual([
-      'Consumer Insights', 'Business Insights', 'Labs',
-    ]);
-    expect(cards[0].getAttribute('heading')).toBe('They Wear Our Faces: How Scammers Are Using AI to Swindle American Families');
-    expect(cards[0].getAttribute('href')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/');
-    expect(cards[0].getAttribute('as')).toBe('h3');
+  it('spaces the cards by the grid\'s md gap at every width', () => {
+    expect(grid.getAttribute('gap')).toBe('md');
+    ['gap-sm', 'gap-md', 'gap-lg'].forEach((name) => expect(grid.hasAttribute(name)).toBe(false));
   });
 
-  it('slots each cover as decorative', () => {
-    const covers = cards.map((card) => card.querySelector(':scope > picture[slot="image"] img'));
-    expect(covers.every((img) => img && img.getAttribute('alt') === '')).toBe(true);
+  it('joins the section to the design system\'s rhythm', () => {
+    const section = block.closest('.section');
+    expect(section.querySelector(':scope > bd-section')).not.toBeNull();
+    expect(block.closest('bd-section')).not.toBeNull();
+  });
+
+  it('builds a card per row: category badge, heading and the heading link', () => {
+    const badges = cards.map((card) => card.querySelector(':scope > bd-badge[slot="badge"]'));
+    expect(badges.map((badge) => badge.textContent)).toEqual([
+      'Consumer Insights', 'Business Insights', 'Labs',
+    ]);
+    // the category in the card's badge look: info, shade, small
+    badges.forEach((badge) => {
+      expect(badge.getAttribute('variant')).toBe('info');
+      expect(badge.getAttribute('appearance')).toBe('shade');
+      expect(badge.getAttribute('size')).toBe('sm');
+    });
+    const title = cards[0].querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('They Wear Our Faces: How Scammers Are Using AI to Swindle American Families');
+    expect(cards[0].getAttribute('href')).toBe('https://www.bitdefender.com/en-us/blog/hotforsecurity/');
+    expect(title.getAttribute('as')).toBe('h3');
+    // the copy is in the card's slots; the card carries only its link
+    cards.forEach((card) => {
+      expect(card.getAttributeNames()).toEqual(['href']);
+    });
+  });
+
+  it('writes the read-more cue on a linked card', () => {
+    expect(cards.map((card) => card.querySelector(':scope > span[slot="read-more"]')?.textContent))
+      .toEqual(['Read more', 'Read more', 'Read more']);
+  });
+
+  it('slots each cover as a decorative bd-img', () => {
+    const covers = cards.map((card) => card.querySelector(':scope > bd-img[slot="media"]'));
+    expect(covers.every(Boolean)).toBe(true);
+    // the picture's webp, at the width the card shows it
+    expect(covers[0].getAttribute('src')).toBe('./media_157d690b013dc21e37092408680aec8b567468d8f.png?width=750&format=webply&optimize=medium');
+    expect(covers[0].getAttribute('width')).toBe('366');
+    expect(covers[0].getAttribute('height')).toBe('148');
+    covers.forEach((cover) => {
+      expect(cover.getAttribute('alt')).toBe('');
+      expect(cover.getAttribute('loading')).toBe('lazy');
+    });
+    // no authored picture is slotted
+    expect(block.querySelector('bd-post-card > picture')).toBeNull();
   });
 
   it('lifts the section header', () => {
     const header = block.closest('.section').querySelector('bd-section-header');
-    expect(header.getAttribute('heading')).toBe('Latest cybersecurity insights');
+    const title = header.querySelector(':scope > bd-h[slot="title"]');
+    expect(title.textContent).toBe('Latest cybersecurity insights');
+    expect(title.getAttribute('as')).toBe('h2');
   });
 });

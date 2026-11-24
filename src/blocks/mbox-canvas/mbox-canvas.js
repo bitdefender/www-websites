@@ -5,6 +5,7 @@ import { decorateMain, detectModalButtons } from '../../scripts/scripts.js';
 import { getMetadata, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
 import page from '../../scripts/page.js';
 import { Constants } from '../../scripts/libs/constants.js';
+import { getBuyLinkRef } from '../../scripts/utils/utils.js';
 import user from '../../scripts/user.js';
 
 function decorateHTMLOffer(aemHeaderHtml) {
@@ -196,7 +197,7 @@ export default async function decorate(block) {
       buyLink: async (param) => {
         const { buyLink, product } = param;
         const buyLinkURL = new URL(buyLink);
-        buyLinkURL.searchParams.set('REF', product.campaign && product.campaign !== 'ignore' ? `WEBSITES_${product.campaign}` : 'N/A');
+        buyLinkURL.searchParams.set('REF', getBuyLinkRef(product));
 
         // the store rebuilds this link on every option change, so the visitor IDs
         // have to be part of the link itself rather than applied to the rendered DOM

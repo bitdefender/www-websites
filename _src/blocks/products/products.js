@@ -365,6 +365,17 @@ function addFeaturedPlaceholder(card) {
 	if (space.style.order) placeholder.style.order = `${Number(space.style.order) + 1}`;
 }
 /**
+* Merges a title authored over consecutive headings ("Bitdefender Digital Identity" + "Protection")
+* into one heading, so every card lays out the same items and the subgrid rows line up.
+* @param {HTMLElement} card
+*/
+function mergeSplitTitle(card) {
+	card.querySelectorAll("h3 + h3").forEach((h3) => {
+		h3.previousElementSibling.append(document.createElement("br"), ...h3.childNodes);
+		h3.remove();
+	});
+}
+/**
 * Main decorate function
 */
 function decorate(block) {
@@ -399,6 +410,7 @@ function decorate(block) {
 	const hasFeaturedCard = !!block.querySelector(".product-card.featured");
 	const hasImageAdjacentText = !block.classList.contains("plans") && !block.classList.contains("compact");
 	block.querySelectorAll(".product-card").forEach((card, idx) => {
+		if (block.classList.contains("solutions")) mergeSplitTitle(card);
 		if (hasImageAdjacentText && card.querySelector("img")) card.querySelector("p:not(:has(img, .icon))")?.classList.add("img-adjacent-text");
 		const dynamicPriceTexts = metadata[`dynamicPriceTexts${idx + 1}`];
 		if (dynamicPriceTexts) setupDynamicPriceTexts(card, dynamicPriceTexts);

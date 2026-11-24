@@ -1,132 +1,133 @@
+import { getSectionContent, liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/four-cards/four-cards.js
-var getIconElement = (col) => {
-	const iconSpan = col.querySelector("[class*=\"icon-\"]");
-	if (iconSpan) {
-		const iconName = Array.from(iconSpan.classList).find((cls) => cls.startsWith("icon-"))?.substring(5);
-		if (iconName) {
-			const img = document.createElement("img");
-			img.src = `/common/icons/${iconName}.svg`;
-			img.setAttribute("slot", "icon");
-			img.setAttribute("width", "32");
-			img.setAttribute("height", "32");
-			return img;
-		}
-	}
-	const picture = col.querySelector("picture");
-	if (picture) {
-		const clone = picture.cloneNode(true);
-		clone.setAttribute("slot", "icon");
-		return clone;
-	}
-	return null;
+var HEADINGS = "h1, h2, h3, h4, h5, h6";
+var iconName = (el) => [...el?.classList || []].find((cls) => cls.startsWith("icon-"))?.substring(5);
+/** An authored picture as a bd-img: its source, its alt, and its size as an aspect hint. */
+var toImg = (picture) => {
+	const img = picture.querySelector("img");
+	const src = img?.currentSrc || img?.getAttribute("src");
+	if (!src) return null;
+	const image = document.createElement("bd-img");
+	image.setAttribute("src", src);
+	image.setAttribute("alt", img.getAttribute("alt") || "");
+	["width", "height"].forEach((name) => {
+		if (img.hasAttribute(name)) image.setAttribute(name, img.getAttribute(name));
+	});
+	return image;
 };
-var buildCardItem = (row, shape) => {
-	const headings = [...row.querySelectorAll("h4, h3, h2, h1")];
-	const title = headings.map((h) => h.textContent.trim()).filter(Boolean).join(" ");
-	const titleHtml = headings.map((h) => h.innerHTML.trim()).filter(Boolean).join("<br>");
-	const item = document.createElement("bd-card-item");
-	item.setAttribute("title", title);
-	if (titleHtml !== title) item.dataset.titleHtml = titleHtml;
-	const iconEl = getIconElement(row);
-	if (iconEl) item.appendChild(iconEl);
-	const iconPicture = iconEl?.tagName === "PICTURE" ? row.querySelector("picture") : null;
+/** The card's icon, a bd-img the card sizes to its icon frame, and the picture it came from. */
+var getIcon = (row) => {
+	const name = iconName(row.querySelector("[class*=\"icon-\"]"));
+	if (name) {
+		const icon = document.createElement("bd-img");
+		icon.slot = "icon";
+		icon.setAttribute("src", `/common/icons/${name}.svg`);
+		icon.setAttribute("alt", "");
+		return { icon };
+	}
+	const picture = row.querySelector("picture");
+	const icon = picture && toImg(picture);
+	if (icon) icon.slot = "icon";
+	return {
+		icon,
+		picture
+	};
+};
+/** A picture in a card's copy, inside a bd-link when it is authored as a linked image. */
+var toMedia = (picture) => {
+	const image = toImg(picture);
+	const anchor = picture.closest("a.linked-image");
+	if (!image || !anchor) return image;
+	const link = document.createElement("bd-link");
+	link.setAttribute("href", anchor.getAttribute("href") || "");
+	if (anchor.target) link.setAttribute("target", anchor.target);
+	image.slot = "start";
+	link.append(image);
+	return link;
+};
+var buildCta = (link, shape) => {
+	const button = document.createElement("bd-button");
+	button.setAttribute("appearance", "accent");
+	button.setAttribute("href", link.getAttribute("href") || "");
+	if (shape) button.setAttribute("shape", shape);
+	button.textContent = link.textContent.trim();
+	return button;
+};
+var buildCard = (row, shape) => {
+	const card = document.createElement("bd-card");
+	const { icon, picture: iconPicture } = getIcon(row);
+	if (icon) card.append(icon);
+	const titleHtml = [...row.querySelectorAll(HEADINGS)].map((h) => h.innerHTML.trim()).filter(Boolean).join("<br>");
+	if (titleHtml) {
+		const title = document.createElement("bd-h");
+		title.slot = "title";
+		title.setAttribute("as", "h3");
+		title.innerHTML = titleHtml;
+		card.append(title);
+	}
 	[...row.querySelectorAll("p")].forEach((p) => {
 		const picture = p.querySelector("picture");
 		if (picture) {
 			if (picture === iconPicture) return;
-			const media = document.createElement("div");
-			media.className = "card-media";
-			media.append(picture.closest("a.linked-image") || picture);
-			item.appendChild(media);
+			const media = toMedia(picture);
+			if (media) card.append(media);
 			return;
 		}
 		if (p.querySelector("[class*=\"icon-\"]") || !p.textContent.trim()) return;
 		const link = p.querySelector("a");
 		if (link) {
-			const bdBtn = document.createElement("bd-button-link");
-			bdBtn.setAttribute("kind", "danger");
-			bdBtn.setAttribute("href", link.getAttribute("href"));
-			bdBtn.setAttribute("slot", "cta");
-			bdBtn.setAttribute("size", "md");
-			if (shape) bdBtn.setAttribute("shape", shape);
-			bdBtn.textContent = link.textContent.trim();
-			item.appendChild(bdBtn);
-		} else {
-			const bdP = document.createElement("bd-p");
-			bdP.setAttribute("kind", "regular");
-			bdP.innerHTML = p.innerHTML;
-			item.appendChild(bdP);
+			const cta = buildCta(link, shape);
+			cta.slot = "actions";
+			card.append(cta);
+			return;
 		}
+		const copy = document.createElement("bd-p");
+		copy.innerHTML = p.innerHTML;
+		card.append(copy);
 	});
-	return item;
+	return card;
 };
+var hasMedia = (row) => !!row?.querySelector("picture, img, [class*=\"icon-\"]");
+/** A row holding a heading and nothing else: the grid's title. */
+var isTitleRow = (row) => !!row?.querySelector(HEADINGS) && !hasMedia(row) && ![...row.querySelectorAll("p")].some((p) => p.textContent.trim());
 async function decorate(block) {
-	const { margintop, shape } = block.closest(".section").dataset;
-	if (margintop) {
-		const blockParent = block.closest(".section");
-		blockParent.style.marginTop = `${margintop}px`;
+	wrapSectionInDsSection(block);
+	const header = liftSectionHeader(block, { defaultLayout: "centered" });
+	const section = block.closest(".section");
+	const { shape } = section?.dataset || {};
+	const centered = section?.classList.contains("centered");
+	const blue = block.classList.contains("blue") || section?.classList.contains("blue");
+	const rows = [...block.children].filter((row) => row.textContent.trim() || hasMedia(row));
+	const titleRow = isTitleRow(rows[0]) ? rows.shift() : null;
+	const grid = document.createElement("bd-card-grid");
+	if (titleRow) {
+		const title = document.createElement("bd-h");
+		title.slot = "title";
+		title.setAttribute("as", "h2");
+		title.textContent = titleRow.querySelector(HEADINGS).textContent.trim();
+		grid.append(title);
 	}
-	const rows = [...block.children];
-	const firstRow = rows[0];
-	const firstRowHasMedia = firstRow?.querySelector("picture, img, [class*=\"icon-\"]");
-	const firstRowHasDescription = [...firstRow?.querySelectorAll("p") || []].some((p) => !p.querySelector("picture") && !p.querySelector("[class*=\"icon-\"]") && p.textContent.trim());
-	const isSectionTitleRow = !firstRowHasMedia && !firstRowHasDescription;
-	const sectionTitle = isSectionTitleRow ? firstRow?.querySelector("h1,h2,h3,h4,h5,h6")?.textContent?.trim() || "" : "";
-	const cardRows = isSectionTitleRow ? rows.slice(1) : rows;
-	const sectionEl = block.closest(".section");
-	const isCentered = sectionEl?.classList.contains("centered");
-	const isBlue = block.classList.contains("blue") || sectionEl?.classList.contains("blue");
-	const useSubgrid = block.classList.contains("use-subgrid") || sectionEl?.classList.contains("use-subgrid");
-	const cardSection = document.createElement("bd-card-section");
-	if (useSubgrid) cardSection.setAttribute("align-rows", "");
-	if (sectionTitle) cardSection.setAttribute("title", sectionTitle);
-	cardRows.forEach((row) => {
-		const item = buildCardItem(row, shape);
-		if (isCentered) {
-			item.setAttribute("align", "center");
-			item.querySelector("bd-button-link[slot=\"cta\"]")?.setAttribute("align", "center");
-		}
-		if (isBlue) item.setAttribute("bg-blue", "");
-		if (shape) item.setAttribute("shape", shape);
-		cardSection.appendChild(item);
+	rows.forEach((row) => {
+		const card = buildCard(row, shape);
+		if (centered) card.setAttribute("align", "center");
+		if (blue) card.setAttribute("background", "tint");
+		grid.append(card);
 	});
-	const allDefaultWrappers = [...sectionEl?.querySelectorAll(".default-content-wrapper") || []];
-	const buttons = [];
-	allDefaultWrappers.forEach((wrapper) => {
-		const heading = wrapper.querySelector("h1,h2,h3,h4,h5,h6");
-		if (heading && !cardSection.hasAttribute("title")) {
-			cardSection.setAttribute("title", heading.textContent.trim());
-			heading.remove();
-		}
-		const subtitleP = [...wrapper.querySelectorAll("p")].find((p) => !p.querySelector("a") && !p.querySelector("picture") && p.textContent.trim());
-		if (subtitleP && !cardSection.hasAttribute("subtitle")) {
-			cardSection.setAttribute("subtitle", subtitleP.textContent.trim());
-			subtitleP.remove();
-		}
-		const link = wrapper.querySelector("a");
-		if (link) {
-			const bdBtn = document.createElement("bd-button-link");
-			bdBtn.setAttribute("kind", "danger");
-			bdBtn.setAttribute("align", "center");
-			bdBtn.setAttribute("href", link.getAttribute("href"));
-			bdBtn.setAttribute("size", "md");
-			if (shape) bdBtn.setAttribute("shape", shape);
-			bdBtn.textContent = link.textContent.trim();
-			buttons.push(bdBtn);
-			(link.closest("p") || link.parentElement).remove();
-		}
-		if (!wrapper.textContent.trim()) wrapper.remove();
+	const wrappers = [...getSectionContent(section)?.querySelectorAll(":scope > .default-content-wrapper") || []];
+	const ctas = wrappers.flatMap((wrapper) => [...wrapper.querySelectorAll(".button-container a")]).map((link) => {
+		const cta = buildCta(link, shape);
+		cta.setAttribute("align", "center");
+		link.closest(".button-container").remove();
+		return cta;
 	});
 	try {
-		await load([cardSection, ...buttons]);
+		await load([grid, ...ctas]);
 	} catch (err) {
 		console.warn("four-cards: DSN import failed, continuing with native rendering", err);
 	}
-	block.replaceChildren(cardSection, ...buttons);
-	block.querySelectorAll("bd-card-item[data-title-html]").forEach((cardItem) => {
-		const bdH = cardItem.shadowRoot?.querySelector("bd-h");
-		if (bdH) bdH.innerHTML = cardItem.dataset.titleHtml;
-	});
+	block.replaceChildren(grid, ...ctas);
+	await header;
+	wrappers.filter((wrapper) => wrapper.isConnected && !wrapper.children.length).filter((wrapper) => !wrapper.textContent.trim()).forEach((wrapper) => wrapper.remove());
 }
 export { decorate as default };

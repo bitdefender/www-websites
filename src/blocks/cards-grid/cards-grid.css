@@ -1,0 +1,82 @@
+/* The benefits figure in the brand's own step, 500, as the site drew it,
+   rather than the brand text role (600) bd-display's color="primary" names:
+   it is display type, 48 bold, which needs 3:1, and 500 measures 4.3:1 on the
+   card's container ground. */
+.cards-grid[data-variant="benefits"] bd-display {
+  --bd-heading-color: var(--color-brand-500);
+}
+
+/* The arrow every button shows on hover, as the red one draws its own
+   (bd-button's accent): the label steps 12 aside and the arrow slides 8 in to
+   12 from the end. bd-button draws it only for the
+   red one, so the block gives the others the same. */
+.cards-grid bd-button.cards-grid__button--arrow {
+  position: relative;
+}
+
+.cards-grid .cards-grid__label {
+  display: inline-block;
+  transition: transform var(--transition-duration-normal) var(--transition-easing-smooth);
+}
+
+.cards-grid .cards-grid__arrow {
+  /* the red one's arrow is the icon's own size, sm, at any button size */
+  --bd-icon-size: var(--icon-sm-size);
+
+  position: absolute;
+  inset-inline-end: var(--spacing-12);
+  top: 50%;
+  opacity: 0;
+  transform: translate(calc(-1 * var(--spacing-8)), -50%);
+  transition:
+    opacity var(--transition-duration-normal) var(--transition-easing-smooth),
+    transform var(--transition-duration-normal) var(--transition-easing-smooth);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .cards-grid bd-button.cards-grid__button--arrow:hover .cards-grid__label {
+    transform: translateX(calc(-1 * var(--spacing-12)));
+  }
+
+  .cards-grid bd-button.cards-grid__button--arrow:hover .cards-grid__arrow {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+
+.cards-grid bd-button.cards-grid__button--arrow:focus-within .cards-grid__label {
+  transform: translateX(calc(-1 * var(--spacing-12)));
+}
+
+.cards-grid bd-button.cards-grid__button--arrow:focus-within .cards-grid__arrow {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cards-grid .cards-grid__label,
+  .cards-grid .cards-grid__arrow {
+    transition: none;
+  }
+}
+
+/* A logo card's head: the eyebrow over its logos, which keep the height the
+   card gives a single logo (bd-card's media, 64) at their own widths. The
+   card sizes what it slots as media; this box holds more than one thing, so
+   it sizes itself. */
+.cards-grid .cards-grid__head {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: var(--spacing-16) var(--spacing-24);
+  height: auto;
+}
+
+.cards-grid .cards-grid__head > bd-p {
+  flex-basis: 100%;
+}
+
+.cards-grid .cards-grid__head > bd-img {
+  --bd-img-height: var(--icon-3xl-size);
+}

@@ -165,18 +165,19 @@
     padding-bottom: 140px;
 }
 
+/* the buttons stand on the page column's content edges (the wrapper's gutters) */
 .trusted-hero-container p.button-container:nth-last-child(1) {
     position: absolute;
     bottom: 0;
-    left: 1em;
-    right: 1em;
+    left: var(--page-column-gutter);
+    right: var(--page-column-gutter);
 }
 
 .trusted-hero-container p.button-container:nth-last-child(2) {
     position: absolute;
     bottom: 70px;
-    left: 1em;
-    right: 1em;
+    left: var(--page-column-gutter);
+    right: var(--page-column-gutter);
 }
 
 .trusted-hero-container p.button-container a {
@@ -297,9 +298,10 @@
         margin-right: 15px;
     }
 
+    /* as wide as the page column's content (100% is the wrapper's padding box) */
     .trusted-hero.video-background table {
         position: absolute;
-        width: 100%;
+        width: calc(100% - 2 * var(--page-column-gutter));
     }
 
     .trusted-hero.video-background table td img {

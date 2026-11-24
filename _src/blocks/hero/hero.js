@@ -153,7 +153,7 @@ function decorate(block) {
 	}
 	if (percentProduct || discountedPrice) {
 		const [alias, variant] = percentProduct?.split(",") || discountedPrice.split(",");
-		const [devices, subscription] = variant.match(/\d+/g)?.map(Number) ?? [];
+		const [devices, subscription] = variant?.match(/\d+/g)?.map(Number) ?? [];
 		wrapChildrenWithStoreContext(block, {
 			productId: alias,
 			devices,

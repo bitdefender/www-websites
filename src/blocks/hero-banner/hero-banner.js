@@ -7,7 +7,9 @@ import page from '../../scripts/page.js';
 
 import {
   createTag,
+  fullWidthOnPhone,
   wrapChildrenWithStoreContext,
+  wrapSectionInDsSection,
   generatePageLoadStartedName,
 } from '../../scripts/utils/utils.js';
 
@@ -36,10 +38,11 @@ import { openModal } from '../../scripts/scripts.js';
  * (white, the signature over the image), otherwise it is the card look (grey card, signature
  * as the eyebrow). The block classes `product` and `card` force one.
  *
- * Text, controls and the badge are dex-system-design atoms (bd-h, bd-p, bd-custom-dropdown,
- * bd-button-link, bd-badge); the layout around them is this block's, on the same tokens.
- * The hero is drawn without waiting for them: it is the LCP, and they take a second to
- * download on mobile. The CSS sizes each one as it will render, so the upgrade moves nothing.
+ * Text, controls and the badge are dex-system-design atoms (bd-h, bd-p, bd-select,
+ * bd-button, bd-badge), each drawn by its own attributes; the layout around them is this
+ * block's, on the design system's page column and tokens. The hero is drawn without
+ * waiting for them: it is the LCP, and they take a second to download on mobile, so the
+ * CSS draws each host as it will render until it is defined (the `v4 gap:` rules there).
  */
 
 const DROPDOWN_MARKER = /^\{\s*dropdown\s*\}$/i;
@@ -93,8 +96,10 @@ function toAtom(tagName, source, attributes = {}) {
 }
 
 /*
- * A CTA is a bd-button-link: accent (red) for the buy button, tertiary (blue outline)
- * for the other. Its anchor is in the shadow root, so:
+ * A CTA is a bd-button with an href: accent (red) for the buy button, tertiary (blue
+ * outline) for the other, at the button's own responsive size. It runs across the column
+ * on a phone and hugs its label from md (fullWidthOnPhone). Its anchor is in the shadow
+ * root, so:
  *  - the store only fills a buy link in when the host carries data-bd-watch-shadow, and
  *    only looks into a shadow root when the host is added to the page. The host is usually
  *    added before the atom has upgraded, so it is put back in place once it has rendered;
@@ -104,13 +109,12 @@ function toAtom(tagName, source, attributes = {}) {
 function createCta({
   text, href, primary, buyLink, trialDuration, keepModal = false,
 }) {
-  const cta = createTag('bd-button-link', {
+  const cta = createTag('bd-button', {
     class: `hero-banner__cta hero-banner__cta--${primary ? 'primary' : 'secondary'}`,
-    variant: primary ? 'accent' : 'tertiary',
-    size: 'lg',
-    fullwidth: '',
+    appearance: primary ? 'accent' : 'tertiary',
   });
   cta.textContent = text;
+  fullWidthOnPhone(cta);
 
   if (buyLink) {
     cta.buyLink = true;
@@ -162,14 +166,16 @@ function buildCtas(settings) {
 function buildPriceBox(product, details, settings) {
   const box = createTag('div', { class: 'hero-banner__offer await-loader' });
 
-  if (details) box.append(createTag('bd-p', { class: 'hero-banner__details', variant: 'small' }, details));
+  if (details) box.append(createTag('bd-p', { class: 'hero-banner__details', appearance: 'small' }, details));
 
-  // the store renders into light-DOM nodes, which the atoms slot
+  // the store renders into light-DOM nodes, which the atoms slot. The struck price and the
+  // discount are drawn as bd-product-hero draws them: body-regular at medium weight in
+  // muted ink, and a large success badge on its fill
   box.insertAdjacentHTML('beforeend', `
     <div class="hero-banner__price">
       <div class="hero-banner__was" data-store-render data-store-hide="!it.option.price.discounted" data-store-hide-type="visibility">
-        <bd-p class="hero-banner__full" variant="regular" font-weight="medium" color="muted"><s data-store-render data-store-price="full"></s></bd-p>
-        <bd-badge class="hero-banner__badge" tone="success" variant="fill" size="lg"><span data-store-render data-store-discount="percentage"></span> ${settings.discounttext || 'OFF'}</bd-badge>
+        <bd-p class="hero-banner__full" appearance="regular" font-weight="medium" color="muted"><s data-store-render data-store-price="full"></s></bd-p>
+        <bd-badge class="hero-banner__badge" variant="success" appearance="fill" size="lg"><span data-store-render data-store-discount="percentage"></span> ${settings.discounttext || 'OFF'}</bd-badge>
       </div>
       <p class="hero-banner__final"><span data-store-render data-store-price="discounted||full"></span></p>
     </div>
@@ -188,10 +194,8 @@ function buildPriceBox(product, details, settings) {
 }
 
 /*
- * bd-custom-dropdown takes its options as text and reports the chosen text, so the
- * labels have to be unique to map back to a product. It has no way to be named from
- * outside its shadow root, and Figma draws no visible label, so the select inside is
- * given the description (or the h1) as its aria-label once it has rendered.
+ * bd-select takes its options as bd-select-option children, each valued by its label, and
+ * reports the chosen value, so the labels have to be unique to map back to a product.
  */
 function buildSelector(products, names, accessibleName, boxes) {
   const labels = [];
@@ -203,28 +207,28 @@ function buildSelector(products, names, accessibleName, boxes) {
     labels.push(label);
   });
 
-  const dropdown = createTag('bd-custom-dropdown', {
+  const dropdown = createTag('bd-select', {
     class: 'hero-banner__select',
     name: 'hero-banner-product',
-    size: 'md',
   });
-  dropdown.options = labels;
+  // data the atom draws as native options; until it renders, the CSS shows the first
+  dropdown.append(...labels.map((label) => {
+    const option = createTag('bd-select-option', { value: label });
+    option.textContent = label;
+    return option;
+  }));
   [dropdown.value] = labels;
-  // shown until the atom renders, which has no slot and hides it
-  [dropdown.textContent] = labels;
 
-  dropdown.addEventListener('bd-change', (e) => {
-    const chosen = labels.indexOf(e.detail.value);
+  dropdown.addEventListener('change', (e) => {
+    const chosen = labels.indexOf(e.target.value);
     boxes.forEach((box, index) => {
       box.hidden = index !== chosen;
     });
   });
 
-  if (accessibleName) {
-    whenRendered(dropdown).then(() => {
-      dropdown.shadowRoot?.querySelector('select')?.setAttribute('aria-label', accessibleName);
-    });
-  }
+  // the design draws no label, so the description (or the h1) names the field;
+  // bd-select passes aria-label to the native select a screen reader focuses
+  if (accessibleName) dropdown.setAttribute('aria-label', accessibleName);
 
   const selector = createTag('div', { class: 'hero-banner__selector' });
   selector.append(dropdown);
@@ -306,7 +310,18 @@ async function loadAtoms(block) {
   }
 }
 
+// Word bolds a heading whole; used as the description it is body copy, so the bold goes
+function unbold(el) {
+  el.querySelectorAll('strong, b').forEach((bold) => bold.replaceWith(...bold.childNodes));
+  return el;
+}
+
 export default function decorate(block) {
+  // the section on the design system's rhythm, both insets kept: neither look is a band
+  // that must meet the site menu (the card sits inside the page column, the product look
+  // has no ground), so the hero stands the section inset clear of it like any section
+  wrapSectionInDsSection(block);
+
   const section = block.closest('.section');
   const settings = { ...(section?.dataset || {}) };
   const {
@@ -330,7 +345,8 @@ export default function decorate(block) {
     copy.append(createTag('p', { class: 'hero-banner__eyebrow' }, signature));
   }
   if (content.productName) {
-    // the authored level stays: the page owns the outline, the design the size
+    // the authored level stays: the page owns the outline. The name is drawn at the h4 role
+    // in brand ink, as bd-product-hero draws its product name over the title
     copy.append(toAtom('bd-h', content.productName, {
       class: 'hero-banner__product',
       as: content.productName.tagName.toLowerCase(),
@@ -339,18 +355,17 @@ export default function decorate(block) {
     }));
   }
   if (content.h1) {
-    copy.append(toAtom('bd-h', content.h1, { class: 'hero-banner__title', as: 'h1', 'visual-level': 'h1' }));
+    // the page's one h1, drawn at the h1 role its level gives it
+    copy.append(toAtom('bd-h', content.h1, { class: 'hero-banner__title', as: 'h1' }));
   }
 
   if (content.description.length) {
     const description = createTag('div', { class: 'hero-banner__description' });
     // Figma draws the description as body text, so a heading used as one becomes a paragraph
-    description.append(...content.description.map((el) => {
-      const paragraph = toAtom('bd-p', el, { variant: 'regular' });
-      // Word bolds such a heading whole; the CSS takes that weight off
-      if (/^H[1-6]$/.test(el.tagName)) paragraph.dataset.authoredAs = 'heading';
-      return paragraph;
-    }));
+    description.append(...content.description.map((el) => toAtom(
+      'bd-p',
+      /^H[1-6]$/.test(el.tagName) ? unbold(el) : el,
+    )));
     copy.append(description);
   }
 
@@ -383,7 +398,7 @@ export default function decorate(block) {
 
   if (content.disclaimer.length) {
     const disclaimer = createTag('div', { class: 'hero-banner__disclaimer' });
-    disclaimer.append(...content.disclaimer.map((el) => toAtom('bd-p', el, { variant: 'xsmall', color: 'muted' })));
+    disclaimer.append(...content.disclaimer.map((el) => toAtom('bd-p', el, { appearance: 'xsmall', color: 'muted' })));
     copy.append(disclaimer);
   }
 
@@ -393,7 +408,12 @@ export default function decorate(block) {
     copy.append(marks);
   }
 
-  block.replaceChildren(copy, buildMedia(content.picture, signature, isProductLook));
+  // the block is the design system's page column (styles.css), on the edges of the
+  // design-system sections around it; the panel inside holds the copy and the image
+  block.classList.add('ds-page-column');
+  const panel = createTag('div', { class: 'hero-banner__panel' });
+  panel.append(copy, buildMedia(content.picture, signature, isProductLook));
+  block.replaceChildren(panel);
 
   // the image is the LCP: on a slow connection the atoms would share its bandwidth, so they
   // load once it has, and until then the CSS draws them
@@ -413,7 +433,7 @@ export default function decorate(block) {
   }
 
   if (linksOpenInNewTab) {
-    block.querySelectorAll('bd-button-link.hero-banner__cta').forEach((cta) => {
+    block.querySelectorAll('bd-button.hero-banner__cta').forEach((cta) => {
       // leave anchors and store buy links as they are
       if (cta.href && !cta.href.includes('#')) cta.target = '_blank';
     });

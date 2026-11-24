@@ -387,7 +387,6 @@
 
 .dropdown-box-container {
     clear: both;
-    padding: 0 var(--body-padding);
 
     .row {
         --bs-gutter-x: 1.5rem;
@@ -428,44 +427,29 @@
     &.container {
         --bs-gutter-x: 1.5rem;
         --bs-gutter-y: 0;
-
-        width: 100%;
-        padding-right: calc(var(--bs-gutter-x)* .5);
-        padding-left: calc(var(--bs-gutter-x)* .5);
-        margin-right: auto;
-        margin-left: auto;
-
-        @media (min-width: 576px) {
-            max-width: 540px;
-        }
-    
-        @media (min-width: 768px) {
-            max-width: 720px;
-        }
-    
-        @media (min-width: 992px) {
-            max-width: 960px;
-        }
-    
-        @media (min-width: 1200px) {
-            max-width: 1140px;
-        }
-
-        @media (min-width: 1400px) {
-            max-width: 1320px;
-        }
     }
 
-    @media (min-width: 990px) {
-        max-width: var(--section-desktop-max-width);
-        padding: 0 var(--section-desktop-padding);
-        margin: 0 auto;
+    /* the section holds the gutter (below), so its default content takes none */
+    > .default-content-wrapper {
+        padding-inline: 0;
     }
+}
 
-    @media (min-width: 1600px) {
-        max-width: var(--section-large-desktop-max-width);
-        padding: 0 var(--section-large-desktop-padding);
-    }
+/* The section is the page column (at :root), so its boxes, and a slider's
+   descriptions placed against it, share the column's edges. */
+.section.dropdown-box-container {
+    box-sizing: border-box;
+    max-width: var(--page-column-max);
+    margin-inline: auto;
+    padding-inline: var(--page-column-gutter);
+}
+
+/* a slider's descriptions and its pattern stand on the column's content edge:
+   in from the section's padding box by the gutter, less the half gutter of the
+   row that pads a description */
+.dropdown-box-container.dropdown-slider::after,
+.dropdown-box-container.dropdown-slider .slider-box .description {
+    right: calc(var(--page-column-gutter) - var(--bs-gutter-x) * .5);
 }
 
 .dropdown-box-container.reverted {
@@ -480,8 +464,9 @@
     }
 }
 
+/* a narrower measure, centred on the column */
 .dropdown-box-container.new-tabs {
-    max-width: 1000px;
+    max-width: min(1000px, var(--page-column-max));
 
     .dropdown-box {
         &::after {
@@ -565,11 +550,6 @@
 
 /* for mobile */
 @media (width <=768px) {
-    .dropdown-box-container {
-        clear: both;
-        padding: 0 15px 5px;
-    }
-
     .dropdown-box-container.dropdown-slider .dropdown-box-wrapper {
         display: block;
     }
@@ -692,4 +672,11 @@
     .dropdown-box-container.new .block ul {
         text-align: left;
     }
+}
+
+/* A section's rows (a slider's rows, or its boxes) are one part of it: they
+   stack as they always did, not two section paddings apart, as the section
+   rhythm spaces a section's separate parts (styles.css) */
+main .section.dropdown-box-container > :is(.slider-box, .dropdown-box-wrapper):not(:last-child) {
+  margin-bottom: 0;
 }

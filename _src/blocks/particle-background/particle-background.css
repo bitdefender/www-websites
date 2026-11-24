@@ -15,10 +15,14 @@
     margin: 48px 0;
 }
 
-.we-container {
+/* the block's wrapper (or its section, from AEM) is the page column (at :root);
+   scoped to this block, as the other blocks' .we-container rules are, so it no
+   longer reaches another block's section on the same page */
+:is(.particle-background-wrapper, .particle-background-container).we-container {
+    box-sizing: border-box;
     margin: 0 auto;
-    padding: 0 20px;
-    max-width: 1330px;
+    padding-inline: var(--page-column-gutter);
+    max-width: var(--page-column-max);
     position: relative;
 }
 
@@ -51,12 +55,5 @@
 @media (max-width: 768px) {
   .particle-background h2 {
     line-height: 30px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .particle-background-container.we-container {
-    max-width: 1330px;
-    padding: 0 20px;
   }
 }

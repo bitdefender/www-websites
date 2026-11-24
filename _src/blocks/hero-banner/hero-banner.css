@@ -2,11 +2,13 @@
 
 /*
  * The product page hero, drawn in dex-core's Figma as "herobanners".
- * Text, controls and the badge are dex-system-design atoms, styled by the atoms. This file
- * lays them out and draws what has no atom (the card, the image, the price) with the
- * design-system tokens. The atoms install the tokens, and the hero is drawn before they
- * arrive, so every token has its value as the fallback. Until each atom upgrades, the
- * rules at the end size its host as the atom will render.
+ * Text, controls and the badge are dex-system-design atoms, each drawn by its own
+ * attributes. This file places them and draws what has no atom (the card, the image, the
+ * signature, the price) with the design-system tokens. The block is the design system's
+ * page column (ds-page-column, styles.css); the panel inside it lays out the copy and the
+ * image. The atoms install the tokens, and the hero is drawn before they arrive, so every
+ * token has its value as the fallback. Until each atom upgrades, the `v4 gap:` rules at
+ * the end draw its host as the atom will render.
  *
  * Rooted on .hero-banner.block, not .hero-banner: a section style of the same name
  * (hero-dropdown pages have one) must not pick up the block's styles.
@@ -15,21 +17,18 @@
   /* bd-p's flow margin off: the column spaces its parts with gap */
   --bd-paragraph-margin-bottom: 0;
 
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  box-sizing: border-box;
-
-  /* the section has no side padding: keep the page's gutter until the hero reaches its width */
-  width: calc(100% - 2 * var(--body-padding, 20px));
-  max-width: 1290px;
-  margin: 0 auto;
   color: var(--color-text-primary, #151719);
   font-family: var(--typography-fontFamily-sans, var(--body-font-family));
   text-align: left;
 }
 
-.hero-banner.block.hero-banner--card {
+.hero-banner .hero-banner__panel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.hero-banner.hero-banner--card .hero-banner__panel {
   padding: var(--spacing-16, 16px);
   border-radius: var(--shape-radius-3xl, 24px);
   background: var(--color-surface-container, #fafafa);
@@ -94,7 +93,7 @@
   pointer-events: none;
 }
 
-/* text, not bd-brand-signature-icon: the mark is drawn in English, the metadata is per locale */
+/* text, not bd-icon name="brand-signature": the mark is drawn in English, the metadata is per locale */
 .hero-banner .hero-banner__signature {
   position: absolute;
   right: var(--spacing-24, 24px);
@@ -145,11 +144,6 @@
   margin-top: calc(var(--spacing-8, 8px) - var(--spacing-16, 16px));
 }
 
-/* a heading used as the description comes bolded whole from Word; Figma draws it regular */
-.hero-banner .hero-banner__description [data-authored-as='heading'] strong {
-  font-weight: inherit;
-}
-
 .hero-banner .hero-banner__selector {
   width: 100%;
 }
@@ -190,7 +184,7 @@
   letter-spacing: var(--typography-heading-h2-letterSpacing, normal);
 }
 
-/* CTAs: full width and stacked below md, side by side from md */
+/* CTAs: stacked below md, where each takes full-width (fullWidthOnPhone), side by side from md */
 .hero-banner .hero-banner__ctas {
   display: flex;
   flex-direction: column;
@@ -219,10 +213,14 @@
 }
 
 /*
- * Until the atoms upgrade: each host drawn with the tokens the atom renders with
- * (dex-system-design 2.3.0), at their values, so nothing moves when it does.
+ * v4 gap: the atoms load once the hero image has (it is the LCP), and the design system
+ * draws nothing for an element it has not defined yet: the title would set at body size,
+ * the dropdown would show every option in a row and the buttons would be bare words. So
+ * until each atom is defined its host is drawn here as the atom renders it, from the same
+ * tokens and attributes, and nothing moves when it upgrades. :not(:defined) only: none of
+ * this reaches a rendered atom.
  */
-.hero-banner :is(bd-h, bd-p, bd-custom-dropdown):not(:defined) {
+.hero-banner :is(bd-h, bd-p, bd-select):not(:defined) {
   display: block;
 }
 
@@ -244,19 +242,21 @@
   line-height: var(--typography-body-regular-lineHeight, 1.5);
 }
 
-.hero-banner bd-p[variant='small']:not(:defined) {
+.hero-banner bd-p[appearance='small']:not(:defined) {
   font-size: var(--typography-body-small-fontSize, 0.875rem);
   line-height: var(--typography-body-small-lineHeight, 1.45);
 }
 
-.hero-banner bd-p[variant='xsmall']:not(:defined) {
-  color: var(--color-text-muted, #565e66);
+.hero-banner bd-p[appearance='xsmall']:not(:defined) {
   font-size: var(--typography-body-xsmall-fontSize, 0.75rem);
   line-height: var(--typography-body-small-lineHeight, 1.45);
 }
 
-.hero-banner bd-p.hero-banner__full:not(:defined) {
+.hero-banner bd-p[color='muted']:not(:defined) {
   color: var(--color-text-muted, #565e66);
+}
+
+.hero-banner bd-p[font-weight='medium']:not(:defined) {
   font-weight: var(--typography-fontWeight-medium, 500);
 }
 
@@ -272,8 +272,9 @@
   line-height: var(--typography-lineHeight-tight, 1.25);
 }
 
-/* the dropdown shows its first label, a light-DOM text the rendered atom has no slot for */
-.hero-banner bd-custom-dropdown:not(:defined) {
+/* the dropdown shows its first option: the options are light-DOM data the rendered atom
+   draws as native options, and slots none of */
+.hero-banner bd-select:not(:defined) {
   box-sizing: border-box;
   height: var(--form-input-medium-height, 44px);
   padding: 11px 40px 11px var(--spacing-16, 16px);
@@ -287,24 +288,33 @@
   text-overflow: ellipsis;
 }
 
-.hero-banner bd-button-link:not(:defined) {
-  display: flex;
+.hero-banner bd-select:not(:defined) > bd-select-option:not(:first-child) {
+  display: none;
+}
+
+/* no size: the button's responsive one, md below lg and lg from it */
+.hero-banner bd-button:not(:defined) {
+  display: inline-flex;
   justify-content: center;
   box-sizing: border-box;
-  width: 100%;
-  padding: var(--button-large-padding, 16px 32px);
-  border-radius: var(--button-large-borderRadius, 8px);
-  font-size: var(--button-large-fontSize, 1.125rem);
+  padding: var(--button-medium-padding, 12px 24px);
+  border-radius: var(--button-medium-borderRadius, 6px);
+  font-size: var(--button-medium-fontSize, 1rem);
   font-weight: var(--typography-fontWeight-medium, 500);
   line-height: var(--typography-lineHeight-tight, 1.25);
 }
 
-.hero-banner bd-button-link[variant='accent']:not(:defined) {
+.hero-banner bd-button[full-width]:not(:defined) {
+  display: flex;
+  width: 100%;
+}
+
+.hero-banner bd-button[appearance='accent']:not(:defined) {
   background: var(--button-accent-background-default, #d60000);
   color: var(--button-accent-text-default, #fff);
 }
 
-.hero-banner bd-button-link[variant='tertiary']:not(:defined) {
+.hero-banner bd-button[appearance='tertiary']:not(:defined) {
   box-shadow: inset 0 0 0 var(--border-width-2, 2px) var(--button-tertiary-border-default, #006dff);
   color: var(--button-tertiary-text-default, #0059d6);
 }
@@ -328,12 +338,6 @@
     width: auto;
   }
 
-  /* the atom's fullwidth makes the host a block: from md the buttons size to their label */
-  .hero-banner .hero-banner__ctas bd-button-link {
-    display: inline-flex;
-    width: auto;
-  }
-
   .hero-banner .hero-banner__selector {
     width: 320px;
     max-width: 100%;
@@ -341,19 +345,26 @@
 }
 
 @media (width >= 992px) {
-  .hero-banner.block {
+  /* the image inset 16 from the panel's top and foot in both looks */
+  .hero-banner .hero-banner__panel {
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-40, 40px);
     padding-block: var(--spacing-16, 16px);
   }
 
-  .hero-banner.block.hero-banner--card {
+  .hero-banner.hero-banner--card .hero-banner__panel {
     gap: 0;
     padding: var(--spacing-16, 16px) var(--spacing-16, 16px) var(--spacing-16, 16px) var(--spacing-40, 40px);
   }
 
-  .hero-banner.block.hero-banner--no-media {
+  .hero-banner.hero-banner--no-media .hero-banner__panel {
     grid-template-columns: 1fr;
+  }
+
+  .hero-banner bd-button:not(:defined) {
+    padding: var(--button-large-padding, 16px 32px);
+    border-radius: var(--button-large-borderRadius, 8px);
+    font-size: var(--button-large-fontSize, 1.125rem);
   }
 
   .hero-banner .hero-banner__media {

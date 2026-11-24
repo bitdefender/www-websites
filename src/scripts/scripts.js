@@ -38,6 +38,8 @@ import {
 } from './libs/data-layer.js';
 
 import user from './user.js';
+// TODO(DEX-29605): remove after Black Friday 2026, with scripts/black-friday/
+import { addBlackFridayRibbon } from './black-friday/ribbon.js';
 
 import {
   createTag,
@@ -46,6 +48,7 @@ import {
   generateLDJsonSchema,
   getPageExperimentKey,
 } from './utils/utils.js';
+import probeBlocker from './utils/blocker-probe.js';
 import { Constants } from './libs/constants.js';
 import {
   applyStructuralHooks,
@@ -657,6 +660,7 @@ async function loadEager(doc) {
     // the page as if it had been authored that way.
     applyStructuralHooks(main);
     decorateMain(main);
+    addBlackFridayRibbon(main); // TODO(DEX-29605): remove after Black Friday 2026
     buildCtaSections(main);
     buildTwoColumnsSection(main);
     detectModalButtons(main);
@@ -872,6 +876,10 @@ function setBFCacheListener() {
 }
 
 async function loadPage() {
+  // Blocker share, counted by Cloudflare: only production traffic, so previews don't skew it.
+  // First, so visitors who leave before the page finishes loading are counted too.
+  if (page.environment === 'prod') probeBlocker();
+
   if (window.location.href.includes('oaiusercontent')) {
     return;
   }

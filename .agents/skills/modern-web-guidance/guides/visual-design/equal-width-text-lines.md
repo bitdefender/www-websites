@@ -3,7 +3,7 @@
 Poster-style lockups where each line is scaled so it spans the container's full width can create visually striking headings.
 Using `text-fit`, the browser scales each line during layout, so it stays correct on resize, copy changes, and font load.
 
-For a single line filling its container (e.g. a heading or pull quote), see `fit-text-to-container` (via `npx -y modern-web-guidance@latest retrieve "fit-text-to-container"`) instead.
+For a single line filling its container (e.g. a heading or pull quote), apply `text-fit` to that element directly; this guide covers multi-line lockups.
 
 ## Basic implementation
 
@@ -58,7 +58,7 @@ Supported by: Chrome 114 (May 2023), Edge 114 (Jun 2023), Firefox 121 (Dec 2023)
 ### For `text-fit`
 
 Browser support for text-fit: Limited availability.
-Supported by: Chrome 150 and Edge 150.
+Supported by: Chrome 150 (Jun 2026) and Edge 150 (Jul 2026).
 Unsupported in: Firefox and Safari.
 
 Forced lines have a short, faithful fallback: measure each line at its base size and scale it by the ratio to the container, with the same cap.

@@ -13,9 +13,11 @@ main .quote-carousel .slides-container {
   overflow: hidden;
 }
 
+/* two equal halves that share the columns block's row (and its gap) rather than overflow it */
 main .quote-carousel-container .has-multi-imgs .left-col, main .quote-carousel-container .has-multi-imgs .right-col {
   width: 50%;
-  flex: 0 0 50%;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 main .quote-carousel-container .has-multi-imgs .right-col picture {
@@ -258,8 +260,9 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
 }
 
 .quote-carousel-container.creators-carousel {
+  /* the wrapper is the card here: its edges sit on the DS page column's content edges */
   .quote-carousel-wrapper {
-    max-width: 1320px;
+    max-width: calc(var(--page-column-max) - 2 * var(--page-column-gutter));
     margin: auto;
     padding-left: 24px;
     padding-right: 24px;
@@ -336,8 +339,12 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
       }
     }
 
+  &.section.wide { /* the wrappers below carry the gutter, not the .wide section */
+    padding-inline: 0;
+  }
+
   &.section.wide > * { /* apply to all children wrapper */
-    max-width: calc(var(--section-desktop-max-width) - 2 * var(--section-desktop-padding));
+    max-width: calc(var(--page-column-max) - 2 * var(--page-column-gutter));
   }
 
   &.section.wide img {
@@ -372,10 +379,11 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
       }
     }
 
+    /* centred with insets + auto margins: Safari ignores justify-self on an abspos box */
     .slide .quote-image {
       top: -80px;
-      justify-self: center;
-      right: unset;
+      inset-inline: 0;
+      margin-inline: auto;
       width: 150px;
       height: 150px;
     }    
@@ -389,5 +397,4 @@ main .quote-carousel-container .has-multi-imgs .right-col picture:first-of-type 
 .section.light-gray .default-content-wrapper {
   padding-bottom: 30px;
   padding-top: 30px;
-  max-width: 1320px;
 }
