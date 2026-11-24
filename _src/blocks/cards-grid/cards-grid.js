@@ -1,4 +1,5 @@
 import { liftSectionHeader, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { openModal } from "../../scripts/scripts.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/cards-grid/cards-grid.js
 var HEADINGS = "h1, h2, h3, h4, h5, h6";
@@ -39,12 +40,50 @@ var iconName = (cell) => [...cell.querySelector(".icon")?.classList || []].find(
 /** The cell's paragraphs that are copy: not a picture, an icon or a link on its own. */
 var copyOf = (cell) => [...cell.querySelectorAll("p")].filter((p) => p.textContent.trim() && !p.querySelector("picture, .icon") && !(p.querySelector("a") && p.textContent.trim() === p.querySelector("a").textContent.trim()));
 var paragraph = (p, appearance) => el("bd-p", { appearance }, ...p.childNodes);
-var linkOf = (cell) => cell.querySelector("a[href]");
-var cta = (link) => link && el("bd-button", {
-	slot: "actions",
-	appearance: "accent",
-	href: link.getAttribute("href")
-}, link.textContent.trim());
+var isBefore = (node, other) => !!other && !!(node.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING);
+/** The cell's eyebrow: the first line of copy before its title, as the
+*  homepage's section headers read one. */
+var eyebrowLine = (cell, title) => title ? copyOf(cell).find((p) => isBefore(p, title)) : null;
+var eyebrowText = (text) => el("bd-p", { appearance: "eyebrow" }, text.trim());
+var hrefOf = (link) => link.getAttribute("href") || link.getAttribute("location");
+var linkOf = (cell) => [...cell.querySelectorAll("a")].find(hrefOf);
+var appearanceOf = (link) => {
+	if (link.classList.contains("modal")) return "plain";
+	if (link.matches(".primary, .secondary") || link.closest("strong, b")) return "secondary";
+	return "accent";
+};
+var withArrow = (button, label) => {
+	button.classList.add("cards-grid__button--arrow");
+	button.append(el("span", { class: "cards-grid__label" }, label), el("bd-icon", {
+		name: "arrow",
+		slot: "end",
+		class: "cards-grid__arrow",
+		"aria-hidden": "true"
+	}));
+	return button;
+};
+/** The cell's buttons, every link on its own line, in the order authored.
+*  `surface` is the ground's: the red button keeps the light one, which draws
+*  it without the white ring a dark one gives it, as it is everywhere else. */
+var ctas = (cell, surface = "light") => [...cell.querySelectorAll("p")].map((p) => p.querySelector("a")).filter((link) => link && hrefOf(link) && link.closest("p").textContent.trim() === link.textContent.trim()).map((link) => {
+	const href = hrefOf(link);
+	const appearance = appearanceOf(link);
+	const label = link.textContent.trim();
+	const button = appearance === "accent" ? el("bd-button", {
+		slot: "actions",
+		appearance
+	}, label) : withArrow(el("bd-button", {
+		slot: "actions",
+		appearance,
+		surface
+	}), label);
+	if (link.classList.contains("modal") || href.includes("/fragments/")) button.addEventListener("click", (e) => {
+		e.preventDefault();
+		openModal(href, link.dataset.stopAutomaticModalRefresh === "true");
+	});
+	else button.setAttribute("href", href);
+	return button;
+});
 var BUILDERS = {
 	media: (cell) => {
 		const card = el("bd-card", { appearance: "media" });
@@ -56,8 +95,7 @@ var BUILDERS = {
 			as: "h3"
 		}, ...titleNodes(heading)));
 		copyOf(cell).forEach((p) => card.append(paragraph(p)));
-		const button = cta(linkOf(cell));
-		if (button) card.append(button);
+		card.append(...ctas(cell, "dark"));
 		return card;
 	},
 	"responsible-ai": (cell) => {
@@ -80,8 +118,7 @@ var BUILDERS = {
 			"font-weight": "semibold"
 		}, ...titleNodes(heading)));
 		copyOf(cell).forEach((p) => card.append(paragraph(p)));
-		const button = cta(linkOf(cell));
-		if (button) card.append(button);
+		card.append(...ctas(cell));
 		return card;
 	},
 	benefits: (cell) => {
@@ -94,17 +131,23 @@ var BUILDERS = {
 			"font-weight": "bold",
 			padding: "24 0 8 0"
 		}, ...titleNodes(title)));
-		copyOf(cell).forEach((p) => card.append(paragraph(p, "small")));
+		copyOf(cell).forEach((p, index) => {
+			const line = paragraph(p, "small");
+			if (!title && figure && index === 0) line.setAttribute("padding-top", "24");
+			card.append(line);
+		});
+		card.append(...ctas(cell));
 		return card;
 	},
 	anchor: (cell) => {
+		const link = linkOf(cell);
 		const card = el("bd-audience-card", {
 			appearance: "outline",
-			href: linkOf(cell)?.getAttribute("href")
+			href: link && hrefOf(link)
 		});
 		const headings = [...cell.querySelectorAll(HEADINGS)];
-		const title = headings.pop();
-		const eyebrow = headings.pop();
+		const title = headings.filter((h) => /^H[1-3]$/.test(h.tagName)).pop();
+		const eyebrow = headings.find((h) => /^H[4-6]$/.test(h.tagName));
 		if (eyebrow) card.append(el("span", { slot: "eyebrow" }, eyebrow.textContent.trim()));
 		if (title) card.append(el("bd-h", {
 			slot: "title",
@@ -115,9 +158,18 @@ var BUILDERS = {
 	},
 	logo: (cell) => {
 		const card = el("bd-card");
-		const logo = toImg(cell.querySelector("picture"), false);
-		if (logo) card.append(Object.assign(logo, { slot: "media" }));
 		const heading = cell.querySelector(HEADINGS);
+		const line = eyebrowLine(cell, heading);
+		const logos = [...cell.querySelectorAll("picture")].map((picture) => toImg(picture, false)).filter(Boolean);
+		if (line) card.append(el("div", {
+			slot: "media",
+			class: "cards-grid__head"
+		}, eyebrowText(line.textContent), ...logos));
+		else if (logos.length > 1) card.append(el("div", {
+			slot: "media",
+			class: "cards-grid__head"
+		}, ...logos));
+		else if (logos.length) card.append(Object.assign(logos[0], { slot: "media" }));
 		if (heading) card.append(el("bd-h", {
 			slot: "title",
 			as: "h3",
@@ -125,9 +177,8 @@ var BUILDERS = {
 			"font-weight": "semibold",
 			"padding-bottom": "8"
 		}, ...titleNodes(heading)));
-		copyOf(cell).forEach((p) => card.append(paragraph(p)));
-		const button = cta(linkOf(cell));
-		if (button) card.append(button);
+		copyOf(cell).filter((p) => p !== line).forEach((p) => card.append(paragraph(p)));
+		card.append(...ctas(cell));
 		return card;
 	}
 };
@@ -136,16 +187,14 @@ var rowsOf = (card) => {
 	return [...card.children].filter((child) => !child.slot).length + 3;
 };
 var columnsFor = (variant, count) => {
-	if (variant === "anchor" || variant === "logo") {
-		const two = String(Math.min(2, count));
-		return {
-			md: two,
-			lg: two
-		};
-	}
+	const lg = String(count <= 4 ? count : 3);
+	if (variant === "anchor" || variant === "logo") return {
+		md: String(Math.min(2, count)),
+		lg
+	};
 	return {
 		md: "1",
-		lg: String(count <= 4 ? count : 3)
+		lg
 	};
 };
 async function decorate(block) {
