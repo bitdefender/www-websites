@@ -89,14 +89,28 @@ describe('cards-grid block', () => {
     expect(buttonsOf(buy)).toEqual([['accent', 'Buy now']]);
     expect(buttonsOf(learn)).toEqual([['secondary', 'Learn more']]);
     expect(buttonsOf(trial)).toEqual([['plain', 'Download free 30-day trial']]);
-    // on the picture's dark ground
-    expect(buy.querySelector('bd-button').getAttribute('surface')).toBe('dark');
+    // the red one keeps the light ground, which draws it without a white ring;
+    // the others take the picture's dark one
+    expect(buy.querySelector('bd-button').hasAttribute('surface')).toBe(false);
+    expect(learn.querySelector('bd-button').getAttribute('surface')).toBe('dark');
     expect(buy.querySelector('bd-button').getAttribute('href')).toBe('https://www.bitdefender.com/en-us/consumer/vpn');
     // a fragment opens as a modal
     const download = trial.querySelector('bd-button');
     expect(download.hasAttribute('href')).toBe(false);
     download.click();
     expect(openModal).toHaveBeenCalledWith('/en-us/consumer/fragments/thank-you-for-downloading', false);
+  });
+
+  it('every button but the red one is given the red one\'s hover arrow', () => {
+    const [buy, learn, trial] = cardsOf(blocks[0]).map((card) => card.querySelector('bd-button'));
+    // the red one draws its own
+    expect(buy.querySelector('bd-icon')).toBeNull();
+    [learn, trial].forEach((button) => {
+      expect(button.classList.contains('cards-grid__button--arrow')).toBe(true);
+      const arrow = button.querySelector('bd-icon[slot="end"]');
+      expect([arrow.getAttribute('name'), arrow.getAttribute('aria-hidden')]).toEqual(['arrow', 'true']);
+      expect(button.querySelector('.cards-grid__label').textContent).toBe(button.textContent);
+    });
   });
 
   it('a card keeps every button authored, in order', () => {
@@ -183,7 +197,21 @@ describe('cards-grid block', () => {
     const title = cga.querySelector('bd-h[slot="title"]');
     expect([title.getAttribute('visual-level'), title.getAttribute('padding-bottom')]).toEqual(['h3', '8']);
     expect(title.innerHTML).toBe('Partner of<br>Creators Guild of America');
-    expect(cga.querySelectorAll('bd-p')).toHaveLength(2);
-    expect(gasa.querySelectorAll('bd-p')).toHaveLength(1);
+    expect(cga.querySelectorAll(':scope > bd-p')).toHaveLength(2);
+    expect(gasa.querySelectorAll(':scope > bd-p')).toHaveLength(1);
+  });
+
+  it('logo: a line before the picture is the eyebrow, over the logo in the card\'s head', () => {
+    const [cga, gasa] = cardsOf(blocks[4]);
+    const head = cga.querySelector(':scope > [slot="media"]');
+    expect(head.className).toBe('cards-grid__head');
+    expect([...head.children].map((child) => child.localName)).toEqual(['bd-p', 'bd-img']);
+    const line = head.querySelector('bd-p');
+    expect([line.getAttribute('appearance'), line.textContent]).toEqual(['eyebrow', 'Brand partnership']);
+    // it is no copy
+    expect([...cga.querySelectorAll(':scope > bd-p')].map((p) => p.textContent))
+      .not.toContain('Brand partnership');
+    // without one, the logo is the media itself
+    expect(gasa.querySelector(':scope > bd-img[slot="media"]')).not.toBeNull();
   });
 });

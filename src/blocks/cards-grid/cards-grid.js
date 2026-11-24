@@ -17,14 +17,19 @@ import {
  *   benefits        a figure (the cell's first heading), a title and a line
  *   anchor          an eyebrow (an h4 to h6), a title (an h1 to h3) and the
  *                   cell's link: the whole card is the link (bd-audience-card)
- *   logo            a partner's logo, a title and paragraphs
+ *   logo            a partner's logo under an optional eyebrow, a title and
+ *                   paragraphs
  *
  * Every card is a subgrid of the row (bd-grid item-rows), so its parts start
  * on one line with its neighbours' however the words above them wrap.
  *
  * A link on its own line is a button at the card's foot, as Columns drew it:
  * a plain link the red one, a bold one the black (grey on a picture), and a
- * link to a fragment the text one that opens it as a modal.
+ * link to a fragment the text one that opens it as a modal. Every one shows
+ * the site's arrow on hover, as the red one draws its own.
+ *
+ * An eyebrow is the brand-ink label over a card, the homepage's: a line of
+ * copy authored before the card's title, or an h4 to h6 over an h1 to h3.
  */
 
 const HEADINGS = 'h1, h2, h3, h4, h5, h6';
@@ -72,6 +77,16 @@ const copyOf = (cell) => [...cell.querySelectorAll('p')].filter((p) => p.textCon
 
 const paragraph = (p, appearance) => el('bd-p', { appearance }, ...p.childNodes);
 
+const isBefore = (node, other) => !!other
+  // eslint-disable-next-line no-bitwise
+  && !!(node.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING);
+
+/** The cell's eyebrow: the first line of copy before its title, as the
+ *  homepage's section headers read one. */
+const eyebrowLine = (cell, title) => (title ? copyOf(cell).find((p) => isBefore(p, title)) : null);
+
+const eyebrowText = (text) => el('bd-p', { appearance: 'eyebrow' }, text.trim());
+
 // detectModalButtons has already moved a fragment link's href to `location`
 const hrefOf = (link) => link.getAttribute('href') || link.getAttribute('location');
 
@@ -85,16 +100,34 @@ const appearanceOf = (link) => {
   return 'accent';
 };
 
-/** The cell's buttons, every link on its own line, in the order authored. */
+/* Only the red button draws the arrow it shows on hover; the others are
+   given the same one, which cards-grid.css moves in as the red one's does.
+   The label is wrapped so it can step aside for it. */
+const withArrow = (button, label) => {
+  button.classList.add('cards-grid__button--arrow');
+  button.append(
+    el('span', { class: 'cards-grid__label' }, label),
+    el('bd-icon', {
+      name: 'arrow', slot: 'end', class: 'cards-grid__arrow', 'aria-hidden': 'true',
+    }),
+  );
+  return button;
+};
+
+/** The cell's buttons, every link on its own line, in the order authored.
+ *  `surface` is the ground's: the red button keeps the light one, which draws
+ *  it without the white ring a dark one gives it, as it is everywhere else. */
 const ctas = (cell, surface = 'light') => [...cell.querySelectorAll('p')]
   .map((p) => p.querySelector('a'))
   .filter((link) => link && hrefOf(link)
     && link.closest('p').textContent.trim() === link.textContent.trim())
   .map((link) => {
     const href = hrefOf(link);
-    const button = el('bd-button', {
-      slot: 'actions', appearance: appearanceOf(link), surface,
-    }, link.textContent.trim());
+    const appearance = appearanceOf(link);
+    const label = link.textContent.trim();
+    const button = appearance === 'accent'
+      ? el('bd-button', { slot: 'actions', appearance }, label)
+      : withArrow(el('bd-button', { slot: 'actions', appearance, surface }), label);
     if (link.classList.contains('modal') || href.includes('/fragments/')) {
       // the button's anchor is in its shadow root, out of detectModalButtons' sight
       button.addEventListener('click', (e) => {
@@ -187,16 +220,24 @@ const BUILDERS = {
      card's height for it and its own width, so it keeps no size of its own. */
   logo: (cell) => {
     const card = el('bd-card');
-    const logo = toImg(cell.querySelector('picture'), false);
-    if (logo) card.append(Object.assign(logo, { slot: 'media' }));
     const heading = cell.querySelector(HEADINGS);
+    // the eyebrow stands over the logos, so the two are the card's media
+    const line = eyebrowLine(cell, heading);
+    const logos = [...cell.querySelectorAll('picture')].map((picture) => toImg(picture, false)).filter(Boolean);
+    if (line) {
+      card.append(el('div', { slot: 'media', class: 'cards-grid__head' }, eyebrowText(line.textContent), ...logos));
+    } else if (logos.length > 1) {
+      card.append(el('div', { slot: 'media', class: 'cards-grid__head' }, ...logos));
+    } else if (logos.length) {
+      card.append(Object.assign(logos[0], { slot: 'media' }));
+    }
     if (heading) {
       // the h3 role, 16 over the copy: the card's 8 and the title's own 8
       card.append(el('bd-h', {
         slot: 'title', as: 'h3', 'visual-level': 'h3', 'font-weight': 'semibold', 'padding-bottom': '8',
       }, ...titleNodes(heading)));
     }
-    copyOf(cell).forEach((p) => card.append(paragraph(p)));
+    copyOf(cell).filter((p) => p !== line).forEach((p) => card.append(paragraph(p)));
     card.append(...ctas(cell));
     return card;
   },
