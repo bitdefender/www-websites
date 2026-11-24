@@ -461,6 +461,7 @@ async function loadFonts() {
 * @param {Element} doc The container element
 */
 async function loadEager(doc) {
+	doc.querySelectorAll("main .bd-edge-price").forEach((line) => line.remove());
 	installBlockHooks({ report: (name, status) => sampleRUM("target-block-hook", {
 		source: name,
 		target: status
