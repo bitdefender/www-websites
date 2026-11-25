@@ -1,4 +1,4 @@
-import { createNanoBlock, matchHeights, renderNanoBlocks, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
+import { createNanoBlock, getNanoBlockText, matchHeights, renderNanoBlocks, wrapChildrenWithStoreContext } from "../../scripts/utils/utils.js";
 // src/blocks/product-comparison-table/product-comparison-table.js
 createNanoBlock("priceComparison", (code, variant, label, block, productIndex, columnEl) => {
 	const [devices, subscription] = variant.match(/\d+/g)?.map(Number) ?? [];
@@ -115,7 +115,7 @@ function buildTableHeader(block) {
 	[...header.children].forEach((headerColumn) => {
 		const paragraphs = [];
 		let next = headerColumn.querySelector("h3")?.nextElementSibling;
-		while (next && next.textContent.trim().toLowerCase() !== "{pricecomparison}") {
+		while (next && getNanoBlockText(next).trim().toLowerCase() !== "{pricecomparison}") {
 			if (next.tagName === "P") paragraphs.push(next);
 			next = next.nextElementSibling;
 		}
