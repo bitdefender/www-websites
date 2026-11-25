@@ -116,6 +116,12 @@
   background-color: transparent;
 }
 
+/* the tag row keeps the cards' tops level while one card has a tag; with none
+   it would only be an empty band between the section title and the cards */
+.new-prod-boxes-container .new-prod-boxes:not(:has(.greenTag2:not(.empty))) .prod_box .greenTag2.empty {
+  display: none;
+}
+
 .new-prod-boxes-container.bf25 .new-prod-boxes .prod_box .greenTag2 {
   background: linear-gradient(to right, #a80000, #e00000, #a80000);
   font-weight: bold;
@@ -989,10 +995,6 @@
     margin: 0;
     width: 100%;
     height: 100%;
-  }
-
-  .switchBox {
-    padding-bottom: var(--size-64);
   }
 
   h2 {
