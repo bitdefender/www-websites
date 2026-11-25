@@ -1192,12 +1192,24 @@ main div.section:is(
 
   main .section.width-medium .block, main .section.width-medium .default-content-wrapper {
     max-width: 940px;
-    margin: 0 auto;
+    margin-inline: auto;
+  }
+
+  /* the block's vertical margins off; a section title's are the section
+     rhythm's, which keeps the gap under it */
+  main .section.width-medium .block {
+    margin-block: 0;
   }
 
   main .section.width-medium-percent .block, main .section.width-medium-percent .default-content-wrapper {
     width: 90%;
-    margin: 0 auto;
+    margin-inline: auto;
+  }
+
+  /* the block's vertical margins off; a section title's are the section
+     rhythm's, which keeps the gap under it */
+  main .section.width-medium-percent .block {
+    margin-block: 0;
   }
 
   main .section.width-medium-p .block p, main .section.width-medium-p .default-content-wrapper p {
@@ -1207,7 +1219,13 @@ main div.section:is(
 
   main .section.width-smaller .block, main .section.width-smaller .default-content-wrapper {
     width: 750px;
-    margin: 0 auto;
+    margin-inline: auto;
+  }
+
+  /* the block's vertical margins off; a section title's are the section
+     rhythm's, which keeps the gap under it */
+  main .section.width-smaller .block {
+    margin-block: 0;
   }
 
   main .section.width-smallest .block, main .section.width-smallest .default-content-wrapper {
