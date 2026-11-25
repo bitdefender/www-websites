@@ -3222,6 +3222,37 @@ main .creators-banner .signature {
     }
   }
 
+  /* the even columns list what's missing: an x-circle in the button red */
+  &.checked-unchecked {
+    background-color: var(--gray-color);
+
+    .columns > div {
+      align-items: baseline;
+
+      > div:last-of-type {
+        ul {
+          list-style: none;
+          padding-left: 0;
+        }
+
+        li {
+          position: relative;
+          padding-left: 28px;
+
+          &::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 15px;
+            height: 15px;
+            background-color: var(--button-background-color);
+            mask: url("/_src/icons/x-circle.svg") no-repeat center / contain;
+          }
+        }
+      }
+    }
+  }
+
   @media (min-width: 576px) {
     &.dex-carousel-cards-individual {
       .columns-text-col:not(:first-of-type) {
