@@ -3,6 +3,7 @@ import {
   renderNanoBlocks,
   matchHeights,
   wrapChildrenWithStoreContext,
+  getNanoBlockText,
 } from '../../scripts/utils/utils.js';
 
 createNanoBlock('priceComparison', (code, variant, label, block, productIndex, columnEl) => {
@@ -158,7 +159,7 @@ function buildTableHeader(block) {
     // group the paragraphs between the product title and the price
     const paragraphs = [];
     let next = headerColumn.querySelector('h3')?.nextElementSibling;
-    while (next && next.textContent.trim().toLowerCase() !== '{pricecomparison}') {
+    while (next && getNanoBlockText(next).trim().toLowerCase() !== '{pricecomparison}') {
       if (next.tagName === 'P') paragraphs.push(next);
       next = next.nextElementSibling;
     }
