@@ -752,22 +752,15 @@ function eventOnDropdownSlider() {
     let activeIndex = 0;
     let interval;
 
+    // Descriptions are positioned against the section, so it can't grow to fit them:
+    // make it reach the active one's bottom. Hidden (mobile), it has no offsetParent.
     function updateSliderHeight() {
-      const sliderBox = slider.querySelector('.slider-box');
       const description = slider.querySelector('.active .description');
-
-      if (!sliderBox || !description || getComputedStyle(sliderBox).display === 'none') {
+      if (!description?.offsetParent) {
         slider.style.removeProperty('min-height');
         return;
       }
-
-      // Reverted descriptions start at 10% of the section's height.
-      const topFraction = slider.classList.contains('reverted') ? 0.1 : 0;
-
-      // sectionHeight >= topFraction * sectionHeight + contentHeight + spacing
-      const height = Math.ceil((description.offsetHeight + 50) / (1 - topFraction));
-
-      slider.style.minHeight = `${height}px`;
+      slider.style.minHeight = `${description.offsetTop + description.offsetHeight + 50}px`;
     }
 
     const resizeObserver = new ResizeObserver(updateSliderHeight);

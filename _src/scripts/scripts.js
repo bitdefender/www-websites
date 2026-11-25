@@ -545,15 +545,12 @@ function eventOnDropdownSlider() {
 		let activeIndex = 0;
 		let interval;
 		function updateSliderHeight() {
-			const sliderBox = slider.querySelector(".slider-box");
 			const description = slider.querySelector(".active .description");
-			if (!sliderBox || !description || getComputedStyle(sliderBox).display === "none") {
+			if (!description?.offsetParent) {
 				slider.style.removeProperty("min-height");
 				return;
 			}
-			const topFraction = slider.classList.contains("reverted") ? .1 : 0;
-			const height = Math.ceil((description.offsetHeight + 50) / (1 - topFraction));
-			slider.style.minHeight = `${height}px`;
+			slider.style.minHeight = `${description.offsetTop + description.offsetHeight + 50}px`;
 		}
 		const resizeObserver = new ResizeObserver(updateSliderHeight);
 		slider.querySelectorAll(".description").forEach((description) => {

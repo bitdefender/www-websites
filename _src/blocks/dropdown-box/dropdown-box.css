@@ -459,7 +459,7 @@
         .description {
             left: 10%;
             width: 40%;
-            top: 10%;
+            top: 5rem; /* not a %: the section's height is sized from this */
         }
     }
 }
