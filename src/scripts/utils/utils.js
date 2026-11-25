@@ -1491,6 +1491,20 @@ export const wrapSectionInDsSection = (block) => {
   return bdSection;
 };
 
+/**
+ * Names the ground a block paints its section with, full bleed: the brand
+ * wash a tinted tab group's bd-section takes, the terms band. The section
+ * carries it as data-ground, beside the section styles that paint a ground
+ * of their own (.blue and the rest), so the site's spacing can tell where
+ * the ground changes between two sections and pad twice the inset on both
+ * sides there (styles.css, "Grounds").
+ * @param {HTMLElement|null} section the block's section (main > .section)
+ * @param {'tint'|'container'} ground
+ */
+export const setSectionGround = (section, ground) => {
+  if (section) section.dataset.ground = ground;
+};
+
 const HEADER_LAYOUTS = ['stacked', 'split', 'centered'];
 
 /**

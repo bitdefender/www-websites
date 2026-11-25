@@ -1,5 +1,5 @@
 import { load } from '@repobit/dex-system-design/loader';
-import { getSectionContent, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import { getSectionContent, setSectionGround, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
 
 /*
  * A bd-accordion. Authored one item a row: [question] [answer]. The heading
@@ -180,6 +180,9 @@ export default async function decorate(block) {
   if (accordion.getAttribute('appearance') === 'terms' && holdsOnlyTheBand) {
     bdSection.setAttribute('without-padding-top', '');
     bdSection.setAttribute('without-padding-bottom', '');
+    // the band is the section's ground: bd-accordion's own, container unless the block says
+    const ground = accordion.getAttribute('background') || 'container';
+    if (ground !== 'none') setSectionGround(bdSection.closest('.section'), ground);
   }
   await load(accordion);
   block.replaceChildren(accordion);

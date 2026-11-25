@@ -591,6 +591,94 @@ main .section:last-child > bd-section:defined:not([without-padding-bottom]) {
   padding-block-end: calc(var(--bd-section-padding) * 2);
 }
 
+/* Grounds. A section's ground is the page's own, or a colour of its own: a
+   section style that paints one (.blue, .light-gray-wide, .grey-background,
+   .light-sky-blue-parent, a black backgroundcolor) or one a block names on
+   its section as data-ground (setSectionGround in utils.js: the tabs' brand
+   wash on their bd-section, the terms band bd-accordion paints across a
+   section that pads nothing).
+
+   Two sections on one ground stand two insets apart, one from each, and the
+   eye measures content to content. Where the ground changes, the eye
+   measures to the edge instead, from either side, so every edge where the
+   ground changes pads twice the inset on both sides of it: the band inside
+   its paint and its neighbour on that side. Two neighbours on one ground keep
+   one inset each and read as one band. An edge turned off stays off. A
+   section holding nothing (one left empty from authoring) stands between no
+   two sections. The design system's bd-section does the same for sibling
+   bd-sections; here every bd-section is in a section of its own, so the
+   site's sections are compared; bd-section paints its own ground. The .blue
+   style keeps its own insets (64, 96 from 992), already past twice the
+   inset, and the news bar is a strip, not a band, and keeps single insets
+   beside it. */
+
+/* the neighbour on the page's ground, on its side facing the band: its own
+   div pads it, or its bd-section does */
+main .section:not(.blue, .light-gray-wide, .grey-background, .light-sky-blue-parent, [data-backgroundcolor="black"], [data-ground]) {
+  &:not(.margin-0, .no-padding-top-bottom, .news-bar-container, .sticky-navigation-container, .full-width, :has(> bd-section:defined)):has(+ .section:is(.blue, .light-gray-wide, .grey-background, .light-sky-blue-parent, [data-backgroundcolor="black"], [data-ground])) {
+    padding-bottom: calc(var(--page-section-padding) * 2);
+  }
+
+  &:has(+ .section:is(.blue, .light-gray-wide, .grey-background, .light-sky-blue-parent, [data-backgroundcolor="black"], [data-ground])) > bd-section:defined:not([without-padding-bottom]) {
+    padding-block-end: calc(var(--bd-section-padding) * 2);
+  }
+
+  :is(.blue, .light-gray-wide, .grey-background, .light-sky-blue-parent, [data-backgroundcolor="black"], [data-ground]) + &:not(.margin-0, .no-padding-top-bottom, .news-bar-container, .sticky-navigation-container, .full-width, :has(> bd-section:defined)),
+  :is(.blue, .light-gray-wide, .grey-background, .light-sky-blue-parent, [data-backgroundcolor="black"], [data-ground]) + .section:not(:has(*)) + &:not(.margin-0, .no-padding-top-bottom, .news-bar-container, .sticky-navigation-container, .full-width, :has(> bd-section:defined)) {
+    padding-top: calc(var(--page-section-padding) * 2);
+  }
+
+  :is(.blue, .light-gray-wide, .grey-background, .light-sky-blue-parent, [data-backgroundcolor="black"], [data-ground]) + & > bd-section:defined:not([without-padding-top]),
+  :is(.blue, .light-gray-wide, .grey-background, .light-sky-blue-parent, [data-backgroundcolor="black"], [data-ground]) + .section:not(:has(*)) + & > bd-section:defined:not([without-padding-top]) {
+    padding-block-start: calc(var(--bd-section-padding) * 2);
+  }
+}
+
+/* an empty section just above a band takes the inset its upper neighbour
+   would add, as it stands between them (the selector cannot look two
+   sections ahead) */
+main .section:not(:has(*)):has(+ .section:is(.blue, .light-gray-wide, .grey-background, .light-sky-blue-parent, [data-backgroundcolor="black"], [data-ground])) {
+  padding-block: 0 var(--page-section-padding);
+}
+
+/* the band, inside its paint, wherever its neighbour is not on its ground */
+main .section[data-ground] {
+  &[data-ground="tint"]:not([data-ground="tint"] + *),
+  &[data-ground="container"]:not([data-ground="container"] + *) {
+    > bd-section:defined:not([without-padding-top]) {
+      padding-block-start: calc(var(--bd-section-padding) * 2);
+    }
+  }
+
+  &[data-ground="tint"]:not(:has(+ [data-ground="tint"])),
+  &[data-ground="container"]:not(:has(+ [data-ground="container"])) {
+    > bd-section:defined:not([without-padding-bottom]) {
+      padding-block-end: calc(var(--bd-section-padding) * 2);
+    }
+  }
+}
+
+main .section:is(.light-gray-wide, .grey-background, .light-sky-blue-parent, [data-backgroundcolor="black"]):not(.margin-0, .no-padding-top-bottom, .news-bar-container, .sticky-navigation-container, .full-width, :has(> bd-section:defined)) {
+  &.light-gray-wide:not(.light-gray-wide + *),
+  &.grey-background:not(.grey-background + *),
+  &.light-sky-blue-parent:not(.light-sky-blue-parent + *),
+  &[data-backgroundcolor="black"]:not([data-backgroundcolor="black"] + *) {
+    padding-top: calc(var(--page-section-padding) * 2);
+  }
+
+  &.light-gray-wide:not(:has(+ .light-gray-wide)),
+  &.grey-background:not(:has(+ .grey-background)),
+  &.light-sky-blue-parent:not(:has(+ .light-sky-blue-parent)),
+  &[data-backgroundcolor="black"]:not(:has(+ [data-backgroundcolor="black"])) {
+    padding-bottom: calc(var(--page-section-padding) * 2);
+  }
+}
+
+/* the terms band pads inside bd-accordion's paint, its section padding nothing */
+main .section[data-ground] bd-accordion[appearance="terms"] {
+  --bd-acc-section-padding-v: calc(var(--page-section-padding) * 2);
+}
+
 main .section.margin-0 {
   padding-top: 0;
   padding-bottom: 0;
@@ -970,20 +1058,22 @@ main .grey-background {
   background-color: #F6F6F6 !important;
 }
 
-/* The v2 sections' spacing, and the page column (at :root) on their wrappers,
-   which hold it for the design system components inside them. A section a
-   design system block has put on bd-section takes both from the design system
-   instead, so these leave it alone; :where() keeps the rules' specificity. */
+/* The v2 sections (the product pages' design) are spaced and titled as the
+   rest of the site is: the section rhythm (main .section) spaces them and their
+   titles are the design system's h2, as on the consumer page. Their wrappers
+   hold the page column (at :root) for the design system components inside
+   them, except a wide section's, which its panels already stand on. A section
+   a design system block has put on bd-section takes all of it from the design
+   system instead, so these leave it alone; :where() keeps the specificity. */
 main div.section:is(
   .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
   .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
   .money-back-container-v2, .barchart-container-v2, .container-v2,
   .copilot-benefits-v2.columns-container
 ):not(:where(:has(> bd-section:defined))) {
-  --v2-section-spacing: var(--size-32);
-  --v2-subtitle-gap: var(--size-16);
+  --v2-subtitle-gap: var(--spacing-16, 16px);
 
-  > div {
+  &:not(.wide) > div {
     --bd-ensemble-max-width: none;
     --bd-ensemble-inline-padding: 0;
 
@@ -993,79 +1083,11 @@ main div.section:is(
     padding-inline: var(--page-column-gutter);
   }
 
-  &:not(.hero-aem-v2) {
-    margin-block: var(--v2-section-spacing) var(--size-0);
-    padding-block: var(--size-0);
-
-    > .default-content-wrapper {
-      padding-block-start: var(--size-0);
-    }
-
-    > div:last-child {
-      padding-block-end: var(--size-0);
-    }
-
-    &:is(.tabs-container-v2, .full-width) {
-      padding-block: var(--v2-section-spacing);
-    }
-
-    &.quote-carousel-container-v2 {
-      > div:first-child {
-        padding-block-start: var(--v2-section-spacing);
-      }
-
-      > div:last-child {
-        padding-block-end: var(--v2-section-spacing);
-      }
-    }
-
-    &:has(.accordion.terms-of-use) {
-      margin-block-start: var(--size-0);
-      background-color: var(--bd-acc-section-bg, var(--color-surface-container));
-    }
-
-    &:has(.accordion.faq) {
-      margin-block: calc(var(--v2-section-spacing) - var(--spacing-64, 64px)) calc(-1 * var(--spacing-64, 64px));
-    }
-
-    &:is(.money-back-container-v2 + div.section):not(:has(.accordion.faq)) {
-      margin-block-start: var(--v2-section-spacing);
-    }
-
-    &.tabs-container {
-      margin-block-start: calc(var(--v2-section-spacing) - var(--spacing-24, 24px));
-
-      &.tabs-container-v2 {
-        margin-block-start: var(--v2-section-spacing);
-        padding-block-start: calc(var(--v2-section-spacing) - var(--spacing-24, 24px));
-      }
-    }
-
-    :is(.default-content-wrapper, .block, .block *) h2 {
-      font-size: var(--typography-heading-h3-fontSize, clamp(1.5rem, calc(1.2619rem + 1.1905vw), 2rem));
-      font-weight: var(--typography-heading-h3-fontWeight, var(--font-weight-bolder));
-      line-height: var(--typography-heading-h3-lineHeight, 1.3);
-      letter-spacing: var(--typography-heading-h3-letterSpacing, normal);
-
-      :is(strong, b) {
-        font-weight: inherit;
-      }
-    }
-
-    > .default-content-wrapper > h2:has(+ :is(h3, h4, p:not(.button-container))) {
-      margin-block-end: var(--v2-subtitle-gap);
-
-      + * {
-        margin-block-start: var(--size-0);
-      }
-    }
-
-    &.accordion-container.container-v2 .accordion.faq bd-accordion {
-      --typography-heading-h2-fontSize: var(--typography-heading-h3-fontSize);
-      --typography-heading-h2-fontWeight: var(--typography-heading-h3-fontWeight);
-      --typography-heading-h2-lineHeight: var(--typography-heading-h3-lineHeight);
-      --typography-heading-h2-letterSpacing: var(--typography-heading-h3-letterSpacing);
-    }
+  /* a full-width band pads inside its own paint, twice the rhythm, and meets the
+     band below it (no strip of the .blue style's mobile margin between them) */
+  &.full-width {
+    padding-block: calc(var(--page-section-padding) * 2);
+    margin-block-end: 0;
   }
 }
 
@@ -1137,17 +1159,6 @@ main div.section:is(
     text-align: center;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-  }
-
-  main div.section:is(
-    .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
-    .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
-    .money-back-container-v2, .barchart-container-v2, .container-v2,
-    .copilot-benefits-v2.columns-container
-  ):not(:where(:has(> bd-section:defined))) {
-    --v2-section-spacing: var(--size-48);
-
-    padding-inline: var(--size-0);
   }
 }
 
@@ -1223,16 +1234,6 @@ main div.section:is(
 
   .creators .section .default-content-wrapper h2 {
     font: 600 40px/48px var(--body-font-family);
-  }
-
-  main div.section:is(
-    .hero-aem-v2, .new-prod-boxes-container-v2, .tabs-container-v2, .accordion-to-cards-container,
-    .awards-v2, .columns-container-v2, .quote-carousel-container-v2, .gasa-v2, .responsible-ai-v2,
-    .money-back-container-v2, .barchart-container-v2, .container-v2,
-    .copilot-benefits-v2.columns-container
-  ):not(:where(:has(> bd-section:defined))) {
-    --v2-section-spacing: var(--size-64);
-    --v2-subtitle-gap: var(--size-24);
   }
 }
 

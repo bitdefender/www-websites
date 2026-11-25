@@ -1,3 +1,9 @@
-/* Nothing of its own: bd-tab-group draws the tabs and their panels, and the
-   brand wash behind a section styled to stand on blue (background="tint");
-   bd-section spaces the section. */
+/* bd-tab-group draws the tabs and their panels, its title at the section
+   title's role (heading-h2), and spaces them; bd-section spaces the section
+   and paints the brand wash behind a section styled to stand on blue
+   (background="tint"). The title weighs 600, as the site's section titles
+   do, where the design system's h2 is 700. */
+.tabs bd-tab-group > bd-h[slot="title"] {
+  /* stylelint-disable-next-line custom-property-pattern */
+  --bd-heading-font-weight: var(--typography-heading-h3-fontWeight, 600);
+}

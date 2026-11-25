@@ -1,5 +1,7 @@
 import { load } from '@repobit/dex-system-design/loader';
-import { getSectionContent, slotIcon, wrapSectionInDsSection } from '../../scripts/utils/utils.js';
+import {
+  getSectionContent, setSectionGround, slotIcon, wrapSectionInDsSection,
+} from '../../scripts/utils/utils.js';
 import { readBlockConfig, loadBlocks, decorateIcons } from '../../scripts/lib-franklin.js';
 
 /*
@@ -92,14 +94,10 @@ const buildTitle = (text, level) => {
 /**
  * The tab group with the section's title, at the level the page wrote it,
  * and its description.
- * @param {{ title: string, level: number, subtitle: string, tint: boolean }} context
+ * @param {{ title: string, level: number, subtitle: string }} context
  */
-const buildTabGroup = ({
-  title, level, subtitle, tint,
-}) => {
+const buildTabGroup = ({ title, level, subtitle }) => {
   const group = document.createElement('bd-tab-group');
-  // the brand wash behind the group, for a section styled to stand on blue
-  if (tint) group.setAttribute('background', 'tint');
   if (title) group.appendChild(buildTitle(title, level));
   if (subtitle) {
     const bdP = document.createElement('bd-p');
@@ -303,13 +301,22 @@ function buildTabsFromSections(config, context) {
 export default async function decorate(block) {
   // the section on the design system's rhythm; the blocks decorated in its
   // panels find this bd-section already there
-  wrapSectionInDsSection(block);
+  const bdSection = wrapSectionInDsSection(block);
   const config = readBlockConfig(block);
+  // the brand wash, for a section styled to stand on blue, is the section's
+  // ground, not the group's: the band's edge is the section's edge, and the
+  // section pads twice its inset inside it (styles.css)
+  const tintSection = ({ tint }) => {
+    if (!tint) return;
+    bdSection?.setAttribute('background', 'tint');
+    setSectionGround(block.closest('.section'), 'tint');
+  };
 
   if ('tab-group' in config) {
     [...block.children].forEach((child) => child.remove());
 
     const context = getSectionContext(block, config);
+    tintSection(context);
     if (context.defaultWrapper && context.title) context.defaultWrapper.remove();
 
     const bdTabs = buildTabsFromSections(config, context);
@@ -328,6 +335,7 @@ export default async function decorate(block) {
     // the icons are SVG before slotIcon reads them
     await decorateIcons(block);
     const context = getSectionContext(block);
+    tintSection(context);
     if (context.defaultWrapper && context.title) context.defaultWrapper.remove();
 
     const tabsEl = buildTabsFromBlock(block, context);

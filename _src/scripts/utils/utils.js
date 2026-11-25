@@ -1358,6 +1358,19 @@ var wrapSectionInDsSection = (block) => {
 	});
 	return bdSection;
 };
+/**
+* Names the ground a block paints its section with, full bleed: the brand
+* wash a tinted tab group's bd-section takes, the terms band. The section
+* carries it as data-ground, beside the section styles that paint a ground
+* of their own (.blue and the rest), so the site's spacing can tell where
+* the ground changes between two sections and pad twice the inset on both
+* sides there (styles.css, "Grounds").
+* @param {HTMLElement|null} section the block's section (main > .section)
+* @param {'tint'|'container'} ground
+*/
+var setSectionGround = (section, ground) => {
+	if (section) section.dataset.ground = ground;
+};
 var HEADER_LAYOUTS = [
 	"stacked",
 	"split",
@@ -1500,4 +1513,4 @@ function onCookiesAccepted(callback) {
 		if (window.adobeDataLayer.getState("ucCategory.functional")) callback();
 	});
 }
-export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getBuyLinkRef, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };
+export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getBuyLinkRef, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setSectionGround, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };

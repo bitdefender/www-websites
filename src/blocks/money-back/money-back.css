@@ -11,8 +11,6 @@
 
 .money-back-container-v2 {
   > .default-content-wrapper {
-    padding-block-end: var(--size-24);
-
     h2 {
       margin: var(--size-0);
     }
@@ -53,6 +51,11 @@
 
       strong {
         padding: var(--size-0);
+      }
+
+      /* a label that wraps (three across a tablet's column) keeps its lines apart */
+      h6 {
+        line-height: 1.25;
       }
     }
   }

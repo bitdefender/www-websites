@@ -1719,7 +1719,7 @@ main .creators-banner .signature {
 }
 
 .columns-container .columns.benefits-cards.light-sky-blue.scam-protection > div > div {
-  background-color: #edf9ff !important;
+  background-color: var(--color-blue-50) !important;
   border-radius: 1.5rem;
   padding: 27px 25px;
   height: 100%;

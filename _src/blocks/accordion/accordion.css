@@ -1,2 +1,7 @@
-/* Nothing of its own: bd-accordion draws its band and items, and bd-section
-   spaces the section. */
+/* bd-accordion draws its band and items, and bd-section spaces the section.
+   The faq's title is the section title, as the site's others are: bd-accordion
+   draws it at heading-h2 (700), the site's section titles weigh 600. */
+.accordion bd-accordion[appearance="faq"] > bd-h[slot="title"] {
+  /* stylelint-disable-next-line custom-property-pattern */
+  --bd-heading-font-weight: var(--typography-heading-h3-fontWeight, 600);
+}

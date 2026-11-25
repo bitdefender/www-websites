@@ -1,5 +1,5 @@
 import { decorateIcons, loadBlocks, readBlockConfig } from "../../scripts/lib-franklin.js";
-import { getSectionContent, slotIcon, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { getSectionContent, setSectionGround, slotIcon, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/tabs/tabs.js
 var SECTION_LEVEL = 2;
@@ -72,11 +72,10 @@ var buildTitle = (text, level) => {
 /**
 * The tab group with the section's title, at the level the page wrote it,
 * and its description.
-* @param {{ title: string, level: number, subtitle: string, tint: boolean }} context
+* @param {{ title: string, level: number, subtitle: string }} context
 */
-var buildTabGroup = ({ title, level, subtitle, tint }) => {
+var buildTabGroup = ({ title, level, subtitle }) => {
 	const group = document.createElement("bd-tab-group");
-	if (tint) group.setAttribute("background", "tint");
 	if (title) group.appendChild(buildTitle(title, level));
 	if (subtitle) {
 		const bdP = document.createElement("bd-p");
@@ -230,11 +229,17 @@ function buildTabsFromSections(config, context) {
 	return bdTabs;
 }
 async function decorate(block) {
-	wrapSectionInDsSection(block);
+	const bdSection = wrapSectionInDsSection(block);
 	const config = readBlockConfig(block);
+	const tintSection = ({ tint }) => {
+		if (!tint) return;
+		bdSection?.setAttribute("background", "tint");
+		setSectionGround(block.closest(".section"), "tint");
+	};
 	if ("tab-group" in config) {
 		[...block.children].forEach((child) => child.remove());
 		const context = getSectionContext(block, config);
+		tintSection(context);
 		if (context.defaultWrapper && context.title) context.defaultWrapper.remove();
 		const bdTabs = buildTabsFromSections(config, context);
 		if (bdTabs) {
@@ -249,6 +254,7 @@ async function decorate(block) {
 	} else {
 		await decorateIcons(block);
 		const context = getSectionContext(block);
+		tintSection(context);
 		if (context.defaultWrapper && context.title) context.defaultWrapper.remove();
 		const tabsEl = buildTabsFromBlock(block, context);
 		try {

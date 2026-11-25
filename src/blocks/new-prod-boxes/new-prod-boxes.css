@@ -976,12 +976,6 @@
 }
 
 .new-prod-boxes-container.new-prod-boxes-container-v2.we-container {
-  margin-bottom: 46px;
-
-  .default-content-wrapper {
-    padding-bottom: var(--size-32);
-  }
-
   .switch {
     position: relative;
   }
@@ -1007,6 +1001,13 @@
     max-width: 600px;
     margin-bottom: var(--size-0);
     text-transform: capitalize;
+  }
+
+  /* the section title, as the site's others are (styles.css) */
+  > .default-content-wrapper h2 {
+    font-size: var(--ds-heading-h2-size);
+    line-height: 1.25;
+    max-width: none;
   }
 
   .hero-aem__prices .button {

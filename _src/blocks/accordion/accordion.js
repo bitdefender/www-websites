@@ -1,4 +1,4 @@
-import { getSectionContent, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
+import { getSectionContent, setSectionGround, wrapSectionInDsSection } from "../../scripts/utils/utils.js";
 import { load } from "../../vendor/repobit/dex-system-design/loader.js";
 // src/blocks/accordion/accordion.js
 /**
@@ -127,6 +127,8 @@ async function decorate(block) {
 	if (accordion.getAttribute("appearance") === "terms" && holdsOnlyTheBand) {
 		bdSection.setAttribute("without-padding-top", "");
 		bdSection.setAttribute("without-padding-bottom", "");
+		const ground = accordion.getAttribute("background") || "container";
+		if (ground !== "none") setSectionGround(bdSection.closest(".section"), ground);
 	}
 	await load(accordion);
 	block.replaceChildren(accordion);

@@ -139,6 +139,13 @@
   width: 100%;
 }
 
+/* the title's lines set close, 1.1, as the hero's headline is drawn (bd-h
+   reads its leading from the hook; the design system's product hero title
+   takes the same step, --typography-lineHeight-110) */
+.hero-banner bd-h.hero-banner__title {
+  --bd-heading-line-height: var(--typography-lineHeight-110, 1.1);
+}
+
 /* the description sits 8px under the title, the rest of the body 16px apart */
 .hero-banner .hero-banner__title + .hero-banner__description {
   margin-top: calc(var(--spacing-8, 8px) - var(--spacing-16, 16px));
@@ -227,7 +234,7 @@
 .hero-banner bd-h.hero-banner__title:not(:defined) {
   font-size: var(--typography-heading-h1-fontSize, clamp(1.875rem, calc(1.3393rem + 2.6786vw), 3rem));
   font-weight: var(--typography-heading-h1-fontWeight, 700);
-  line-height: var(--typography-heading-h1-lineHeight, 1.25);
+  line-height: var(--typography-lineHeight-110, 1.1);
 }
 
 .hero-banner bd-h.hero-banner__product:not(:defined) {

@@ -121,13 +121,18 @@ describe('tabs block, Tab group mode', () => {
     expect(document.querySelectorAll('bd-section')).toHaveLength(1);
   });
 
-  it('draws no ground of its own on a plain section', () => {
+  it('draws no ground on a plain section', () => {
     expect(group.hasAttribute('background')).toBe(false);
+    expect(block.closest('bd-section').hasAttribute('background')).toBe(false);
+    expect(block.closest('.section').hasAttribute('data-ground')).toBe(false);
   });
 
-  it('puts the brand wash behind the group in a section styled tabs-container-v2', async () => {
+  it('puts the brand wash on the bd-section of a section styled tabs-container-v2', async () => {
     const tinted = await renderFixture('tabs-group.mock.html', withFirstSectionStyle('tabs-container-v2'));
-    expect(tinted.querySelector(':scope > bd-tab-group').getAttribute('background')).toBe('tint');
+    expect(tinted.closest('bd-section').getAttribute('background')).toBe('tint');
+    // named on the section too, for the site's spacing where the ground changes
+    expect(tinted.closest('.section').dataset.ground).toBe('tint');
+    expect(tinted.querySelector(':scope > bd-tab-group').hasAttribute('background')).toBe(false);
   });
 });
 
