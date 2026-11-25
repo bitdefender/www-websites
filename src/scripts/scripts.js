@@ -752,6 +752,29 @@ function eventOnDropdownSlider() {
     let activeIndex = 0;
     let interval;
 
+    function updateSliderHeight() {
+      const sliderBox = slider.querySelector('.slider-box');
+      const description = slider.querySelector('.active .description');
+
+      if (!sliderBox || !description || getComputedStyle(sliderBox).display === 'none') {
+        slider.style.removeProperty('min-height');
+        return;
+      }
+
+      // Reverted descriptions start at 10% of the section's height.
+      const topFraction = slider.classList.contains('reverted') ? 0.1 : 0;
+
+      // sectionHeight >= topFraction * sectionHeight + contentHeight + spacing
+      const height = Math.ceil((description.offsetHeight + 50) / (1 - topFraction));
+
+      slider.style.minHeight = `${height}px`;
+    }
+
+    const resizeObserver = new ResizeObserver(updateSliderHeight);
+    slider.querySelectorAll('.description').forEach((description) => {
+      resizeObserver.observe(description);
+    });
+
     function showLoadingBar(index) {
       const loadingBar = loadingBars[index];
       loadingBar.style.width = '0';
@@ -769,7 +792,6 @@ function eventOnDropdownSlider() {
       titles.forEach((title, index) => {
         if (index === activeIndex) {
           title.parentNode.classList.add('active');
-          title.closest('.dropdown-slider').setAttribute('style', `min-height: ${title.parentNode.querySelector('.description').offsetHeight + 50}px`);
           if (loadingBars.length) {
             showLoadingBar(index);
           }
@@ -778,6 +800,7 @@ function eventOnDropdownSlider() {
         }
       });
 
+      updateSliderHeight();
       activeIndex = (activeIndex + 1) % titles.length; // Move to the next item and handle wrapping
     }
 
