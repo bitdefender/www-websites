@@ -33,7 +33,7 @@ function openBuyLinksInNewTab(container) {
     const storeBuyLinks = [...container.querySelectorAll('a[data-store-buy-link]')];
     const isBuyLink = link.hasAttribute('data-store-buy-link')
       || link.getAttribute('href').includes('#buylink')
-      || storeBuyLinks.some((buyLink) => buyLink.href === link.href);
+      || storeBuyLinks.some((buyLink) => link.href.startsWith(buyLink.href));
 
     if (isBuyLink) {
       link.setAttribute('target', '_blank');
