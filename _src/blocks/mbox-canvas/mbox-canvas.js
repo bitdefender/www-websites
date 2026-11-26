@@ -26,7 +26,7 @@ function openBuyLinksInNewTab(container) {
 		const link = event.target.closest("a[href]");
 		if (!link) return;
 		const storeBuyLinks = [...container.querySelectorAll("a[data-store-buy-link]")];
-		if (link.hasAttribute("data-store-buy-link") || link.getAttribute("href").includes("#buylink") || storeBuyLinks.some((buyLink) => buyLink.href === link.href)) link.setAttribute("target", "_blank");
+		if (link.hasAttribute("data-store-buy-link") || link.getAttribute("href").includes("#buylink") || storeBuyLinks.some((buyLink) => link.href.startsWith(buyLink.href))) link.setAttribute("target", "_blank");
 	}, true);
 }
 var serviceIdSegmentCache = /* @__PURE__ */ new Map();
