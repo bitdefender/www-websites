@@ -17,6 +17,30 @@ function decorateHTMLOffer(aemHeaderHtml) {
   return newHtml;
 }
 
+/**
+ * Buy links in the offer open in a new tab. Decided at click time because offer blocks
+ * rebuild their anchors (webview-plan-selector) and copy store hrefs onto other CTAs,
+ * so attributes set on the authored markup don't survive.
+ * @param {Element} container
+ */
+function openBuyLinksInNewTab(container) {
+  container.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href]');
+    if (!link) {
+      return;
+    }
+
+    const storeBuyLinks = [...container.querySelectorAll('a[data-store-buy-link]')];
+    const isBuyLink = link.hasAttribute('data-store-buy-link')
+      || link.getAttribute('href').includes('#buylink')
+      || storeBuyLinks.some((buyLink) => buyLink.href === link.href);
+
+    if (isBuyLink) {
+      link.setAttribute('target', '_blank');
+    }
+  }, true);
+}
+
 const serviceIdSegmentCache = new Map();
 async function extractServiceId(serviceId) {
   if (!serviceId) {
@@ -250,11 +274,8 @@ export default async function decorate(block) {
   }
 
   const decoratedOfferHtml = decorateHTMLOffer(offerHtml);
-  // Make all the links that contain #buylink in href open in a new browser window
-  decoratedOfferHtml.querySelectorAll('a[href*="#buylink"]').forEach((link) => {
-    link.setAttribute('target', '_blank');
-  });
   block.querySelector('.canvas-content').innerHTML = decoratedOfferHtml.innerHTML;
+  openBuyLinksInNewTab(block);
   await loadBlocks(block.querySelector('.canvas-content'));
   decorateIcons(block.querySelector('.canvas-content'));
 }
