@@ -120,6 +120,10 @@ const getFreeProductsEvents = () => {
  * and send data to CDP
  */
 const resolvePageLoadStartedEvent = async () => {
+  // Cloudflare's bot classification for trafficClassification: the worker's cookies,
+  // or its /botmv call, started now so it runs alongside the awaits below
+  const botManagement = user.botManagement;
+
   // push the pageLoadStartedEvent to the Adobe Data Layer
   AdobeDataLayerService.push(new PageLoadStartedEvent(
     page,
@@ -133,6 +137,7 @@ const resolvePageLoadStartedEvent = async () => {
       internalPromotionID: page.getParamValue('icid') || '',
       trackingID: page.getParamValue('cid') || '',
     },
+    await botManagement,
   ));
 };
 

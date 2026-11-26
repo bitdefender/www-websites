@@ -52,13 +52,13 @@
   "dependencies": {
     "@glidejs/glide": "^3.7.1",
     "@repobit/dex-constants": "^2.4.0",
-    "@repobit/dex-data-layer": "^2.4.3",
-    "@repobit/dex-launch": "^3.0.141",
+    "@repobit/dex-data-layer": "^2.5.0",
+    "@repobit/dex-launch": "^3.0.144",
     "@repobit/dex-store": "^2.0.0",
     "@repobit/dex-store-elements": "^3.0.0",
     "@repobit/dex-system-design": "^4.3.2",
-    "@repobit/dex-target": "^2.17.7",
-    "@repobit/dex-utils": "^2.5.1",
+    "@repobit/dex-target": "^2.17.11",
+    "@repobit/dex-utils": "^2.7.0",
     "@tsparticles/all": "^3.9.1",
     "@tsparticles/engine": "^3.8.1"
   },

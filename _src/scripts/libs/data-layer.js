@@ -85,6 +85,7 @@ var getFreeProductsEvents = () => {
 * and send data to CDP
 */
 var resolvePageLoadStartedEvent = async () => {
+	const botManagement = user_default.botManagement;
 	AdobeDataLayerService.push(new PageLoadStartedEvent(page_default, {
 		experimentDetails: await getTargetExperimentDetails() ?? getExperimentDetails(),
 		geoRegion: await user_default.country,
@@ -93,7 +94,7 @@ var resolvePageLoadStartedEvent = async () => {
 	}, {
 		internalPromotionID: page_default.getParamValue("icid") || "",
 		trackingID: page_default.getParamValue("cid") || ""
-	}));
+	}, await botManagement));
 };
 /**
 * push the userDetectedEvent to the Data Layer
