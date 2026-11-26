@@ -544,6 +544,18 @@ function eventOnDropdownSlider() {
 		const loadingBars = slider.querySelectorAll(".loading-bar");
 		let activeIndex = 0;
 		let interval;
+		function updateSliderHeight() {
+			const description = slider.querySelector(".active .description");
+			if (!description?.offsetParent) {
+				slider.style.removeProperty("min-height");
+				return;
+			}
+			slider.style.minHeight = `${description.offsetTop + description.offsetHeight + 50}px`;
+		}
+		const resizeObserver = new ResizeObserver(updateSliderHeight);
+		slider.querySelectorAll(".description").forEach((description) => {
+			resizeObserver.observe(description);
+		});
 		function showLoadingBar(index) {
 			const loadingBar = loadingBars[index];
 			loadingBar.style.width = "0";
@@ -558,10 +570,10 @@ function eventOnDropdownSlider() {
 			titles.forEach((title, index) => {
 				if (index === activeIndex) {
 					title.parentNode.classList.add("active");
-					title.closest(".dropdown-slider").setAttribute("style", `min-height: ${title.parentNode.querySelector(".description").offsetHeight + 50}px`);
 					if (loadingBars.length) showLoadingBar(index);
 				} else title.parentNode.classList.remove("active");
 			});
+			updateSliderHeight();
 			activeIndex = (activeIndex + 1) % titles.length;
 		}
 		function startAutomaticMovement() {

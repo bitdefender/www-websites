@@ -752,6 +752,22 @@ function eventOnDropdownSlider() {
     let activeIndex = 0;
     let interval;
 
+    // Descriptions are positioned against the section, so it can't grow to fit them:
+    // make it reach the active one's bottom. Hidden (mobile), it has no offsetParent.
+    function updateSliderHeight() {
+      const description = slider.querySelector('.active .description');
+      if (!description?.offsetParent) {
+        slider.style.removeProperty('min-height');
+        return;
+      }
+      slider.style.minHeight = `${description.offsetTop + description.offsetHeight + 50}px`;
+    }
+
+    const resizeObserver = new ResizeObserver(updateSliderHeight);
+    slider.querySelectorAll('.description').forEach((description) => {
+      resizeObserver.observe(description);
+    });
+
     function showLoadingBar(index) {
       const loadingBar = loadingBars[index];
       loadingBar.style.width = '0';
@@ -769,7 +785,6 @@ function eventOnDropdownSlider() {
       titles.forEach((title, index) => {
         if (index === activeIndex) {
           title.parentNode.classList.add('active');
-          title.closest('.dropdown-slider').setAttribute('style', `min-height: ${title.parentNode.querySelector('.description').offsetHeight + 50}px`);
           if (loadingBars.length) {
             showLoadingBar(index);
           }
@@ -778,6 +793,7 @@ function eventOnDropdownSlider() {
         }
       });
 
+      updateSliderHeight();
       activeIndex = (activeIndex + 1) % titles.length; // Move to the next item and handle wrapping
     }
 
