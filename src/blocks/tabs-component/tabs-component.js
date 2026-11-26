@@ -58,6 +58,8 @@ export default function decorate(block, options) {
       buttonsContainer.appendChild(button);
     });
 
+    // the trusted variant lays the tabs out in even rows from their count
+    buttonsContainer.style.setProperty('--tab-count', divs.length);
     container.replaceChildren(buttonsContainer);
   } else {
     // eslint-disable-next-line no-console

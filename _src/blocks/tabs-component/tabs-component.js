@@ -31,6 +31,7 @@ function decorate(block, options) {
 			});
 			buttonsContainer.appendChild(button);
 		});
+		buttonsContainer.style.setProperty("--tab-count", divs.length);
 		container.replaceChildren(buttonsContainer);
 	} else console.error("Container not found");
 	sections.forEach((element, index) => {
