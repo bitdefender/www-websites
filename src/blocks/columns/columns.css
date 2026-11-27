@@ -606,6 +606,95 @@ main .creators-banner .signature {
   display: block;
 }
 
+/* image-cover: the image runs down to the section's bottom edge, where the
+   next band starts. The text column comes first when the columns stack, so
+   the image still closes the section. */
+main .section.image-cover {
+  padding-bottom: 0;
+
+  .columns > div {
+    margin-bottom: 0;
+
+    > .columns-img-col {
+      order: 1;
+      margin-bottom: 0;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    @media (width >= 992px) {
+      align-items: center;
+      gap: 48px;
+
+      > .columns-text-col {
+        flex: 0 1 33%;
+      }
+
+      > .columns-img-col { /* on the bottom edge even when the text is taller */
+        align-self: flex-end;
+      }
+    }
+  }
+
+  /* the Ferrari "threat timeline" copy: a big title, a light subtitle and a
+     filled button */
+  .columns.ferrari-text .columns-text-col {
+    font-size: 18px;
+    line-height: 1.2;
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: var(--ds-heading-h1-size);
+      font-weight: var(--font-weight-bolder);
+      line-height: 1;
+
+      strong {
+        font-weight: inherit;
+      }
+    }
+
+    h5 {
+      margin: 0 0 36px;
+      font-size: var(--ds-heading-h3-size);
+      font-weight: var(--font-weight-regular);
+      line-height: 1.15;
+    }
+
+    p {
+      font-size: inherit;
+      line-height: inherit;
+    }
+
+    .button-container {
+      margin-top: 40px;
+    }
+
+    a.button {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 4px;
+      background: #006DFF;
+      color: #fff;
+      font-size: 16px;
+      font-weight: var(--font-weight-regular);
+      line-height: 1.2;
+      text-align: left;
+      text-decoration: none;
+
+      &:hover {
+        background: #0A53C5;
+      }
+
+      &::after { /* no arrow on this button */
+        display: none;
+      }
+    }
+  }
+}
+
 /* stylelint-disable-next-line selector-class-pattern */
 .v2_benefits .columns-container .default-content-wrapper {
   margin-bottom: 3em;
