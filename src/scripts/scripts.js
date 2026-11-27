@@ -621,6 +621,10 @@ async function loadFonts() {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
+  // locale-router writes a price line into each price block for crawlers that don't run JS
+  // (its src/priceSsr.ts). The blocks render their own prices, so the lines go before anything
+  // reads the authored HTML; the body is hidden until then, so visitors never see them.
+  doc.querySelectorAll('main .bd-edge-price').forEach((line) => line.remove());
   installBlockHooks({
     report: (name, status) => sampleRUM('target-block-hook', { source: name, target: status }),
   });
