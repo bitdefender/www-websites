@@ -1,7 +1,6 @@
 import page_default from "../page.js";
 import { decorateBlocks, decorateSections, loadCSS } from "../lib-franklin.js";
 // src/scripts/black-friday/ribbon.js
-var END = /* @__PURE__ */ new Date("2026-12-02T11:00:00+02:00");
 var PAGES_WITH_LINKED_RIBBON = [
 	"antivirus",
 	"antivirus-for-mac",
@@ -40,16 +39,16 @@ var SOLUTIONS_PRODUCTS = [
 var SOLUTIONS_PRODUCTS_EN_US = [...SOLUTIONS_PRODUCTS, "us_pf"];
 var DISCOUNT = "<span data-store-render data-store-context-discount=\"max-percentage\" class=\"await-loader\"></span>";
 var MAIN_TEXT = {
-	en: "Black Friday Limited Time deals!",
-	de: "Zeitlich begrenzte Angebote zum Black Friday!",
-	es: "¡Ofertas por tiempo limitado del Black Friday!",
-	fr: "Offres à durée limitée pour le Black Friday&nbsp;!",
-	it: "Offerte a tempo limitato del Black Friday!",
-	nl: "Black Friday-Tijdelijke aanbieding!",
-	pt: "Ofertas por tempo limitado da Black Friday!",
-	ro: "Black Friday! Ofertă limitată!",
-	sv: "Black Friday-Tidsbegränsade erbjudanden!",
-	zh: "黑色星期五限時優惠！"
+	en: "CyberSales Limited Time deals!",
+	de: "Zeitlich begrenzte Angebote zum CyberSales!",
+	es: "¡Ofertas por tiempo limitado del CyberSales!",
+	fr: "Offres à durée limitée pour le CyberSales&nbsp;!",
+	it: "Offerte a tempo limitato del CyberSales!",
+	nl: "CyberSales-Tijdelijke aanbieding!",
+	pt: "Ofertas por tempo limitado da CyberSales!",
+	ro: "CyberSales! Ofertă limitată!",
+	sv: "CyberSales-Tidsbegränsade erbjudanden!",
+	zh: "CyberSales 限時優惠！"
 };
 var SUB_TEXT = {
 	en: `Save up to ${DISCOUNT}!`,
@@ -63,7 +62,7 @@ var SUB_TEXT = {
 	sv: `Spara upp till ${DISCOUNT}!`,
 	zh: `最高可省 ${DISCOUNT}!`
 };
-var isCampaignRunning = () => /* @__PURE__ */ new Date() < END;
+var isCampaignRunning = () => true;
 /**
 * @returns {{ linked: boolean } | null} the ribbon this page shows, or null when it shows none
 */
@@ -115,7 +114,7 @@ function addBlackFridayRibbon(main) {
 */
 var isBlackFridayRibbon = (block) => !!block.closest(`.section.${RIBBON_SECTION_CLASS}`);
 /**
-* Replaces the news bar's content with the Black Friday ribbon.
+* Replaces the news bar's content with the CyberSales ribbon.
 * @param {Element} block the news-bar block, one isBlackFridayRibbon picked
 * @returns {Promise<void>} resolves once the ribbon's styles are loaded
 */
@@ -123,7 +122,7 @@ async function renderBlackFridayRibbon(block) {
 	const { linked } = getBlackFridayRibbon();
 	const textArea = `
     <div class="bf-text-area">
-      <img class="bf-discount-logo" src="${`${getFolder()}/images/ribbon-tag.png`}" width="20" height="23" alt="">
+      <img class="bf-discount-logo" src="${`${getFolder()}/images/ribbon-tag-blue.png`}" width="20" height="23" alt="">
       <p class="bf-text">
         <strong>${MAIN_TEXT[page_default.language]}</strong>
         <span class="bf-subtext">${SUB_TEXT[page_default.language]}</span>

@@ -2,7 +2,7 @@ import {
   describe, it, expect, vi, beforeEach, afterEach,
 } from 'vitest';
 
-// TODO(DEX-29605): remove after Black Friday 2026, with scripts/black-friday/
+// TODO(DEX-29605): remove after CyberSales 2026, with scripts/black-friday/
 
 // the ribbon's stylesheet: jsdom never loads it
 vi.mock('../../scripts/lib-franklin.js', async (importOriginal) => ({
@@ -71,11 +71,10 @@ describe('getBlackFridayRibbon', () => {
     expect((await loadRibbon('/ja-jp/consumer/vpn')).getBlackFridayRibbon()).toBeNull();
   });
 
-  it('shows the ribbon until 2 Dec, 11:00 Bucharest time', async () => {
+  it('keeps showing the ribbon after Black Friday, since CyberSales has no end date yet', async () => {
     const path = '/en-us/consumer/vpn';
-    expect((await loadRibbon(path, new Date('2026-11-16T12:00:00+02:00'))).getBlackFridayRibbon()).not.toBeNull();
-    expect((await loadRibbon(path, new Date('2026-12-02T10:59:00+02:00'))).getBlackFridayRibbon()).not.toBeNull();
-    expect((await loadRibbon(path, new Date('2026-12-02T11:00:00+02:00'))).getBlackFridayRibbon()).toBeNull();
+    expect((await loadRibbon(path, new Date('2026-12-02T11:00:00+02:00'))).getBlackFridayRibbon()).not.toBeNull();
+    expect((await loadRibbon(path, new Date('2027-01-15T12:00:00+02:00'))).getBlackFridayRibbon()).not.toBeNull();
   });
 });
 
@@ -154,9 +153,9 @@ describe('renderBlackFridayRibbon', () => {
 
     expect(block.closest('.section').classList).toContain('bf-25');
     expect(block.textContent).not.toContain('Authored');
-    expect(block.querySelector('strong').textContent).toBe('Zeitlich begrenzte Angebote zum Black Friday!');
+    expect(block.querySelector('strong').textContent).toBe('Zeitlich begrenzte Angebote zum CyberSales!');
     expect(block.querySelector('.bf-subtext [data-store-context-discount="max-percentage"]')).not.toBeNull();
-    expect(block.querySelector('img').getAttribute('src')).toBe('/_src/scripts/black-friday/images/ribbon-tag.png');
+    expect(block.querySelector('img').getAttribute('src')).toBe('/_src/scripts/black-friday/images/ribbon-tag-blue.png');
     expect(block.querySelector('a, bd-context')).toBeNull();
   });
 

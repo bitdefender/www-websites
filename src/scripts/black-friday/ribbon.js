@@ -2,9 +2,12 @@ import page from '../page.js';
 import { decorateBlocks, decorateSections, loadCSS } from '../lib-franklin.js';
 
 /*
- * TODO(DEX-29605): remove after Black Friday 2026 (ends 2 Dec 2026, 11:00).
+ * TODO(DEX-29605): remove after CyberSales 2026.
  *
- * The Black Friday 2026 ribbon, for the traffic Adobe Target's activity doesn't reach. The
+ * The CyberSales 2026 ribbon: the Black Friday one with the campaign's name and a blue tag. Its
+ * names (black-friday/, addBlackFridayRibbon, bf-* classes) stay those of the Black Friday ribbon.
+ *
+ * The ribbon for the traffic Adobe Target's activity doesn't reach. The
  * markup, classes and copy are the activity's, so whichever of the two renders the ribbon, it
  * looks the same; on Target's traffic the activity replaces this one.
  *
@@ -18,8 +21,9 @@ import { decorateBlocks, decorateSections, loadCSS } from '../lib-franklin.js';
  *   3. npm run build, commit _src/ with it
  */
 
-// the campaign ends on 2 Dec 2026, 11:00, Bucharest time; it starts when this code ships
-const END = new Date('2026-12-02T11:00:00+02:00');
+// the campaign starts when this code ships and has no end date yet: set one here once it has
+// (Bucharest time, e.g. new Date('2026-12-31T23:59:59+02:00'))
+const END = null;
 
 // ribbon linking to the Solutions page, with the biggest discount of its plans
 const PAGES_WITH_LINKED_RIBBON = ['antivirus', 'antivirus-for-mac', 'security-for-creators', 'mobile-security-android', 'mobile-security-ios', 'small-office-security', 'scam-protection', 'realcheck', 'identity-theft-protection', 'scamio', 'reverse-phone-lookup', 'digital-footprint-checker', 'password-generator', 'link-checker', 'ai-skills-checker'];
@@ -36,16 +40,16 @@ const SOLUTIONS_PRODUCTS_EN_US = [...SOLUTIONS_PRODUCTS, 'us_pf'];
 const DISCOUNT = '<span data-store-render data-store-context-discount="max-percentage" class="await-loader"></span>';
 
 const MAIN_TEXT = {
-  en: 'Black Friday Limited Time deals!',
-  de: 'Zeitlich begrenzte Angebote zum Black Friday!',
-  es: '¡Ofertas por tiempo limitado del Black Friday!',
-  fr: 'Offres à durée limitée pour le Black Friday&nbsp;!',
-  it: 'Offerte a tempo limitato del Black Friday!',
-  nl: 'Black Friday-Tijdelijke aanbieding!',
-  pt: 'Ofertas por tempo limitado da Black Friday!',
-  ro: 'Black Friday! Ofertă limitată!',
-  sv: 'Black Friday-Tidsbegränsade erbjudanden!',
-  zh: '黑色星期五限時優惠！',
+  en: 'CyberSales Limited Time deals!',
+  de: 'Zeitlich begrenzte Angebote zum CyberSales!',
+  es: '¡Ofertas por tiempo limitado del CyberSales!',
+  fr: 'Offres à durée limitée pour le CyberSales&nbsp;!',
+  it: 'Offerte a tempo limitato del CyberSales!',
+  nl: 'CyberSales-Tijdelijke aanbieding!',
+  pt: 'Ofertas por tempo limitado da CyberSales!',
+  ro: 'CyberSales! Ofertă limitată!',
+  sv: 'CyberSales-Tidsbegränsade erbjudanden!',
+  zh: 'CyberSales 限時優惠！',
 };
 
 const SUB_TEXT = {
@@ -61,7 +65,7 @@ const SUB_TEXT = {
   zh: `最高可省 ${DISCOUNT}!`,
 };
 
-const isCampaignRunning = () => new Date() < END;
+const isCampaignRunning = () => !END || new Date() < END;
 
 /**
  * @returns {{ linked: boolean } | null} the ribbon this page shows, or null when it shows none
@@ -136,13 +140,13 @@ export function addBlackFridayRibbon(main) {
 export const isBlackFridayRibbon = (block) => !!block.closest(`.section.${RIBBON_SECTION_CLASS}`);
 
 /**
- * Replaces the news bar's content with the Black Friday ribbon.
+ * Replaces the news bar's content with the CyberSales ribbon.
  * @param {Element} block the news-bar block, one isBlackFridayRibbon picked
  * @returns {Promise<void>} resolves once the ribbon's styles are loaded
  */
 export async function renderBlackFridayRibbon(block) {
   const { linked } = getBlackFridayRibbon();
-  const tagIcon = `${getFolder()}/images/ribbon-tag.png`;
+  const tagIcon = `${getFolder()}/images/ribbon-tag-blue.png`;
   const textArea = `
     <div class="bf-text-area">
       <img class="bf-discount-logo" src="${tagIcon}" width="20" height="23" alt="">
