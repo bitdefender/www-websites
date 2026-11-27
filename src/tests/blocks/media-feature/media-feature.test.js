@@ -45,6 +45,7 @@ describe('media-feature block', () => {
   it('writes a bd-features-tab a row, alternating the media\'s side', () => {
     expect(rows).toHaveLength(2);
     expect(rows.map((row) => row.hasAttribute('reverse'))).toEqual([false, true]);
+    rows.forEach((row) => expect(row.hasAttribute('appearance')).toBe(false));
   });
 
   it('slots the heading at the level the page wrote it, with no colour of its own', () => {
@@ -78,5 +79,30 @@ describe('media-feature block', () => {
     const player = rows[1].querySelector(':scope > bd-video-player[slot="media"]');
     expect(player.getAttribute('src')).toBe('https://www.youtube.com/embed/abc123');
     expect(player.getAttribute('video-title')).toBe('Video player');
+  });
+
+  it('passes section appearance metadata to every features tab', async () => {
+    const main = document.createElement('main');
+    main.innerHTML = fixture;
+    main.firstElementChild.insertAdjacentHTML('beforeend', `
+      <div class="section-metadata">
+        <div><div>Appearance</div><div>contained</div></div>
+      </div>
+    `);
+    document.body.append(main);
+
+    try {
+      decorateButtons(main);
+      decorateSections(main);
+      decorateBlocks(main);
+      const feature = main.querySelector('.media-feature');
+      await decorate(feature);
+      const tabs = [...feature.querySelectorAll(':scope > bd-features-tab')];
+      expect(tabs).toHaveLength(2);
+      expect(tabs.map((tab) => tab.getAttribute('appearance'))).toEqual(['contained', 'contained']);
+      expect(tabs.map((tab) => tab.hasAttribute('reverse'))).toEqual([false, true]);
+    } finally {
+      main.remove();
+    }
   });
 });
