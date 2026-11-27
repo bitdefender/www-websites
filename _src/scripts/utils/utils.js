@@ -566,11 +566,28 @@ function formatPrice(price, currency) {
 	}).format(price);
 }
 var nanoBlocks = /* @__PURE__ */ new Map();
-function findTextNodes(parent) {
+var EDGE_NANOBLOCK_ATTRIBUTE = "data-edge-nanoblock";
+/**
+* The nodes that can hold a nanoblock placeholder, in document order: text nodes, and the
+* elements locale-router rendered a placeholder into.
+*/
+function findNanoBlockNodes(parent) {
 	let all = [];
-	for (let node = parent.firstChild; node; node = node.nextSibling) if (node.nodeType === Node.TEXT_NODE) all.push(node);
-	else all = all.concat(findTextNodes(node));
+	for (let node = parent.firstChild; node; node = node.nextSibling) if (node.nodeType === Node.TEXT_NODE || node.hasAttribute?.(EDGE_NANOBLOCK_ATTRIBUTE)) all.push(node);
+	else all = all.concat(findNanoBlockNodes(node));
 	return all;
+}
+function getPlaceholderText(node) {
+	return node.nodeType === Node.TEXT_NODE ? node.textContent : node.getAttribute(EDGE_NANOBLOCK_ATTRIBUTE);
+}
+/**
+* The text of an element as authored: the placeholder locale-router rendered into it,
+* if it did, otherwise its text.
+* @param {Element} element
+* @returns {string}
+*/
+function getNanoBlockText(element) {
+	return element.querySelector(`[${EDGE_NANOBLOCK_ATTRIBUTE}]`)?.getAttribute(EDGE_NANOBLOCK_ATTRIBUTE) ?? element.textContent;
 }
 /**
 * Create a nano block
@@ -625,8 +642,8 @@ function getDatasetFromSection(block) {
 */
 async function renderNanoBlocks(parent = document.body, mv = void 0, index = void 0, block = void 0) {
 	const regex = /{([^}]+)}/g;
-	findTextNodes(parent).forEach((node) => {
-		const matches = node.textContent.trim().match(regex);
+	findNanoBlockNodes(parent).forEach((node) => {
+		const matches = getPlaceholderText(node).trim().match(regex);
 		if (matches) matches.forEach((match) => {
 			const [name] = parseParams(match.slice(1, -1));
 			const datasetValue = getDatasetFromSection(parent);
@@ -1500,4 +1517,4 @@ function onCookiesAccepted(callback) {
 		if (window.adobeDataLayer.getState("ucCategory.functional")) callback();
 	});
 }
-export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getBuyLinkRef, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };
+export { GLOBAL_EVENTS, GLOBAL_V2_LOCALES, IANA_BY_REGION_MAP, addScript, adjustFontSizeUntilTargetHeight, checkIfNotProductPage, createBdContext, createBdOption, createBdProduct, createNanoBlock, createTag, decorateBlockWithRegionId, decorateIcons, decorateLinkWithLinkTrackingId, embedYoutube, fetchIndex, fixExcelFilterZeroes, formatPrice, fullWidthOnPhone, generateLDJsonSchema, generatePageLoadStartedName, generateProductBuyLink, getAemFragmentLocale, getBrowserName, getBuyLinkCountryPrefix, getBuyLinkRef, getCampaignBasedOnLocale, getDatasetFromSection, getDomain, getExperimentDetails, getMetadata, getNanoBlockText, getPageExperimentKey, getPidFromUrl, getPriceLocalMapByLocale, getProductFinding, getProductLinkCountryPrefix, getSectionContent, getUrlPromotion, isView, liftSectionHeader, makeImagePathsAbsolute, matchHeights, onCookiesAccepted, openUrlForOs, pushTrialDownloadToDataLayer, renderNanoBlocks, renderTurnstile, setDataOnBuyLinks, setUrlParams, shouldABTestsBeDisabled, slotIcon, splitAroundHeading, submitWithTurnstile, trackProduct, wrapChildrenWithStoreContext, wrapSectionInDsSection };

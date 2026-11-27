@@ -323,13 +323,36 @@ export function formatPrice(price, currency) {
 
 const nanoBlocks = new Map();
 
-function findTextNodes(parent) {
+// locale-router puts the price a nanoblock shows in place of its placeholder, for clients that
+// don't run JS, and keeps the placeholder in this attribute (its src/priceSsr.ts)
+const EDGE_NANOBLOCK_ATTRIBUTE = 'data-edge-nanoblock';
+
+/**
+ * The nodes that can hold a nanoblock placeholder, in document order: text nodes, and the
+ * elements locale-router rendered a placeholder into.
+ */
+function findNanoBlockNodes(parent) {
   let all = [];
   for (let node = parent.firstChild; node; node = node.nextSibling) {
-    if (node.nodeType === Node.TEXT_NODE) all.push(node);
-    else all = all.concat(findTextNodes(node));
+    if (node.nodeType === Node.TEXT_NODE || node.hasAttribute?.(EDGE_NANOBLOCK_ATTRIBUTE)) all.push(node);
+    else all = all.concat(findNanoBlockNodes(node));
   }
   return all;
+}
+
+function getPlaceholderText(node) {
+  return node.nodeType === Node.TEXT_NODE ? node.textContent : node.getAttribute(EDGE_NANOBLOCK_ATTRIBUTE);
+}
+
+/**
+ * The text of an element as authored: the placeholder locale-router rendered into it,
+ * if it did, otherwise its text.
+ * @param {Element} element
+ * @returns {string}
+ */
+export function getNanoBlockText(element) {
+  return element.querySelector(`[${EDGE_NANOBLOCK_ATTRIBUTE}]`)?.getAttribute(EDGE_NANOBLOCK_ATTRIBUTE)
+    ?? element.textContent;
 }
 
 /**
@@ -417,8 +440,8 @@ export async function renderNanoBlocks(
   block = undefined,
 ) {
   const regex = /{([^}]+)}/g;
-  findTextNodes(parent).forEach((node) => {
-    const text = node.textContent.trim();
+  findNanoBlockNodes(parent).forEach((node) => {
+    const text = getPlaceholderText(node).trim();
     const matches = text.match(regex);
     if (matches) {
       matches.forEach((match) => {

@@ -46,15 +46,41 @@ global.ResizeObserver = ResizeObserverMock;
 global.fetch = vi.fn(async () => ({ ok: false }));
 
 /**
+ * Puts every placeholder in the block the way locale-router sends it to clients that don't
+ * run JS: its value in a span that keeps the placeholder in `data-edge-nanoblock`.
+ * @param {HTMLElement} root
+ */
+function renderPlaceholdersAtTheEdge(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+  textNodes.forEach((node) => {
+    if (!/{[^}]+}/.test(node.textContent)) return;
+    const parts = node.textContent.split(/({[^}]+})/).filter(Boolean);
+    node.replaceWith(...parts.map((part) => {
+      if (!/^{[^}]+}$/.test(part)) return document.createTextNode(part);
+      const span = document.createElement('span');
+      span.setAttribute('data-edge-nanoblock', part);
+      span.innerHTML = 'Old Price <s>$109.99</s> $49.99';
+      return span;
+    }));
+  });
+}
+
+/**
  * Loads a fixture into the document, runs the same decoration as the page pipeline
  * and decorates the products block.
  * @param {string} fixture fixture name, without the `.mock.html` suffix
+ * @param {boolean} [atTheEdge] render the block's placeholders the way locale-router does first
  * @returns {Promise<{section: HTMLElement, block: HTMLElement}>}
  */
-async function renderFixture(fixture) {
+async function renderFixture(fixture, atTheEdge = false) {
   const html = await readFile(path.join(__dirname, `${fixture}.mock.html`), 'utf-8');
   document.body.innerHTML = `<main>${html}</main>`;
   const main = document.querySelector('main');
+  if (atTheEdge) {
+    renderPlaceholdersAtTheEdge(main.querySelector('div.products'));
+  }
 
   decorateButtons(main);
   decorateIcons(main);
@@ -411,6 +437,18 @@ describe('products block - product switching (synthetic)', () => {
     expect(lowestPrice.textContent).toBe(
       'Starting at {{=it.state.price.discounted.min || it.state.price.full.min}}',
     );
+  });
+});
+
+describe('products block - placeholders rendered by locale-router', () => {
+  it.each(['products-plans', 'products-compare', 'products-switch'])('decorates %s exactly as from the authored placeholders', async (fixture) => {
+    const { block: authored } = await renderFixture(fixture);
+    const authoredHtml = authored.outerHTML;
+
+    const { block: atTheEdge } = await renderFixture(fixture, true);
+
+    expect(atTheEdge.outerHTML).toBe(authoredHtml);
+    expect(atTheEdge.querySelector('[data-edge-nanoblock]')).toBeNull();
   });
 });
 
