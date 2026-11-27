@@ -1,4 +1,4 @@
-// TODO(DEX-29605): remove after Black Friday 2026, with scripts/black-friday/
+// TODO(DEX-29605): remove after CyberSales 2026, with scripts/black-friday/
 // (and make decorate sync again)
 import { isBlackFridayRibbon, renderBlackFridayRibbon } from '../../scripts/black-friday/ribbon.js';
 
@@ -12,7 +12,7 @@ export default async function decorate(block, options) {
     block = block.querySelector('.block');
   }
 
-  // TODO(DEX-29605): remove after Black Friday 2026, with scripts/black-friday/
+  // TODO(DEX-29605): remove after CyberSales 2026, with scripts/black-friday/
   // On the campaign's pages, the news bar at the top shows its ribbon instead.
   if (isBlackFridayRibbon(block)) {
     await renderBlackFridayRibbon(block);

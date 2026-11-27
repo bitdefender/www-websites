@@ -38,7 +38,7 @@ import {
 } from './libs/data-layer.js';
 
 import user from './user.js';
-// TODO(DEX-29605): remove after Black Friday 2026, with scripts/black-friday/
+// TODO(DEX-29605): remove after CyberSales 2026, with scripts/black-friday/
 import { addBlackFridayRibbon } from './black-friday/ribbon.js';
 
 import {
@@ -660,7 +660,7 @@ async function loadEager(doc) {
     // the page as if it had been authored that way.
     applyStructuralHooks(main);
     decorateMain(main);
-    addBlackFridayRibbon(main); // TODO(DEX-29605): remove after Black Friday 2026
+    addBlackFridayRibbon(main); // TODO(DEX-29605): remove after CyberSales 2026
     buildCtaSections(main);
     buildTwoColumnsSection(main);
     detectModalButtons(main);
