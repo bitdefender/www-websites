@@ -128,6 +128,7 @@ var buildFeaturesTab = (row, shouldReverse) => {
 };
 async function decorate(block) {
 	wrapSectionInDsSection(block);
+	const appearance = block.closest(".section")?.dataset.appearance;
 	const isAlternating = block.classList.contains("alternating");
 	const forceReverse = block.classList.contains("reverse") ? true : null;
 	const rows = Array.from(block.children);
@@ -136,6 +137,7 @@ async function decorate(block) {
 		let shouldReverse = forceReverse;
 		if (isAlternating) shouldReverse = idx % 2 !== 0;
 		const tab = buildFeaturesTab(row, shouldReverse);
+		if (tab && appearance) tab.setAttribute("appearance", appearance);
 		if (tab) fragment.appendChild(tab);
 	});
 	try {
